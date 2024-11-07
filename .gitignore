@@ -39,3 +39,8 @@ next-env.d.ts
 
 #serverless
 .serverless
+
+# amplify
+.amplify
+amplify_outputs*
+amplifyconfiguration*
