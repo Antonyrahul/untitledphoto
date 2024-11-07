@@ -44,6 +44,7 @@ const StudioPage = ({ project, hasImageInputAvailable }: IStudioPageProps) => (
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession({ req: context.req });
   const projectId = context.query.id as string;
+  console.log(projectId)
 
   if (!session) {
     return {
@@ -69,6 +70,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     orderBy: { createdAt: "desc" },
   });
 
+  console.log(project)
+
   if (!project) {
     return {
       notFound: true,
@@ -76,7 +79,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const { data: model } = await replicateClient.get(
-    `https://api.replicate.com/v1/models/${process.env.REPLICATE_USERNAME}/${project.id}/versions/${project.modelVersionId}`
+    `https://api.replicate.com/v1/models/${process.env.REPLICATE_USERNAME}/photoshottest1/`
   );
 
   const hasImageInputAvailable = Boolean(
