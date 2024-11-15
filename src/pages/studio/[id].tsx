@@ -78,20 +78,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const { data: model } = await replicateClient.get(
-    `https://api.replicate.com/v1/models/${process.env.REPLICATE_USERNAME}/photoshottest1/`
-  );
+  // const { data: model } = await replicateClient.get(
+  //   `/v1/models/photoshottest1/`
+  // );
 
-  const hasImageInputAvailable = Boolean(
-    model.openapi_schema?.components?.schemas?.Input?.properties?.image?.title
-  );
+  // const hasImageInputAvailable = Boolean(
+  //   model.openapi_schema?.components?.schemas?.Input?.properties?.image?.title
+  // );
 
   const { json: serializedProject } = superjson.serialize(project);
 
   return {
     props: {
       project: serializedProject,
-      hasImageInputAvailable,
+      
     },
   };
 }

@@ -28,6 +28,9 @@ import { useMutation } from "react-query";
 import AvatarsPlaceholder from "../home/AvatarsPlaceholder";
 import { CheckedListItem } from "../home/Pricing";
 import UploadErrorMessages from "./UploadErrorMessages";
+import JSZip from "jszip";
+import {saveAs } from 'file-saver'
+
 
 type TUploadState = "not_uploaded" | "uploading" | "uploaded";
 export type FilePreview = (File | Blob) & { preview: string };
@@ -97,11 +100,40 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
     setUploadState("uploading");
 
     for (let index = 0; index < filesToUpload.length; index++) {
+      console.log("buffer to upload",filesToUpload[index])
       const file = await resizeImage(filesToUpload[index]);
       const { url } = await uploadToS3(file);
 
       setUrls((current) => [...current, url]);
+      console.log(url)
     }
+    // const zip = new JSZip();
+
+    // for (let index = 0; index < filesToUpload.length; index++) {
+    //   try {
+    //     // Read the file as binary data
+    //     let fileData = await filesToUpload[index].arrayBuffer();
+        
+    //     // Add the file to the zip using its name
+    //     console.log(filesToUpload[index].type)
+    //     zip.file(`${index}.jpg`, fileData);
+    //   } catch (error) {
+    //     console.error(`Error reading file`,error);
+    //   }
+    // }
+  
+    // Generate the zip file as a Blob and trigger download
+    // zip.generateAsync({ type: 'blob' })
+    //   .then((content) => {
+    //     saveAs(content, 'images.zip');
+    //   })
+    //   .catch((error) => {
+    //     console.error('Failed to generate zip file:', error.message);
+    //   });
+    // const zipBlob = await zip.generateAsync({ type: 'blob' });
+    // const arrayBuffer = await zipBlob.arrayBuffer();
+    // const { url } = await uploadToS3(zipBlob);
+ 
 
     setUploadState("uploaded");
   };

@@ -5,6 +5,8 @@ import { createZipFolder } from "@/core/utils/assets";
 import s3Client from "@/core/clients/s3";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import replicateClient from "@/core/clients/replicate";
+import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
@@ -17,7 +19,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const urls = req.body.urls as string[];
     const studioName = req.body.studioName as string;
     const instanceClass = req.body.instanceClass as string;
-
+    
+  
     const project = await db.project.create({
       data: {
         imageUrls: urls,
@@ -29,16 +32,38 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         credits: Number(process.env.NEXT_PUBLIC_STUDIO_SHOT_AMOUNT) || 50,
       },
     });
-
+    console.log("in here")
     const buffer = await createZipFolder(urls, project);
+    console.log("buffer is ",buffer)
 
-    await s3Client.send(
+//     const accessKeyId=process.env.S3_UPLOAD_KEY ?? ""
+//     const secretAccessKey=process.env.S3_UPLOAD_SECRET ?? ""
+//  const s3Client:any = new S3Client({
+//   region: 'ap-south-1',
+//   credentials: {
+//     accessKeyId: accessKeyId,
+//     secretAccessKey: secretAccessKey
+//   }
+// });
+
+
+//   const command:any = new GetObjectCommand({
+//     Bucket: "photoshotut1",
+//     Key: "next-s3-uploads/03eacfb6-bfb1-4145-96cf-9a99811f4f85/m3hi17i2.jpeg"
+//   })
+  
+  
+//   const sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+//   console.log("signed url bha",sigedurl)
+
+    const s3Resp=await s3Client.send(
       new PutObjectCommand({
         Bucket: process.env.S3_UPLOAD_BUCKET!,
         Key: `${project.id}.zip`,
         Body: buffer,
       })
     );
+    console.log("response from s3 is",s3Resp)
 
     return res.json({ project });
   }

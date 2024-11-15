@@ -24,6 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (req.method === "GET") {
+
+    console.log("idhan da")
     const { data: prediction } = await replicateClient.get(
       `https://api.replicate.com/v1/predictions/${shot.replicateId}`
     );

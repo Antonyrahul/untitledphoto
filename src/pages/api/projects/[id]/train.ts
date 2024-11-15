@@ -4,7 +4,14 @@ import { getSession } from "next-auth/react";
 import replicateClient from "@/core/clients/replicate";
 import { getRefinedInstanceClass } from "@/core/utils/predictions";
 const Replicate = require("replicate");
+import * as fal from "@fal-ai/serverless-client";
+import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { Shot } from "@prisma/client";
 
+fal.config({
+  credentials: process.env.FAL_KEY,
+})
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const projectId = req.query.id as string;
@@ -31,7 +38,115 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const response = await replicate.models.versions.list("magicofspade","photoshottest1");
+  const accessKeyId=process.env.S3_UPLOAD_KEY ?? ""
+  const secretAccessKey=process.env.S3_UPLOAD_SECRET ?? ""
+
+const s3Client:any = new S3Client({
+  region: 'ap-south-1',
+  credentials: {
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey
+  }
+});
+
+var objKey =`${project.id}.zip` ;
+
+var command:any = new GetObjectCommand({
+  Bucket: "photoshotut1",
+  Key: objKey
+})
+var sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+console.log(sigedurl)
   console.log(response)
+  const result:any = await fal.subscribe("fal-ai/flux-lora-fast-training", {
+    input: {
+      images_data_url: sigedurl,
+      steps: 1000,
+      rank: 16,
+      learning_rate: 0.0004,
+      caption_dropout_rate: 0.05,
+      experimental_optimizers: "adamw8bit",
+      experimental_multi_checkpoints_count: 1,
+      trigger_word: "sksrr"
+    },
+    logs: true,
+    onQueueUpdate: (update) => {
+      if (update.status === "IN_PROGRESS") {
+        update.logs.map((log) => log.message).forEach(console.log);
+      }
+    },
+  });
+  console.log(result)
+  console.log(result.diffusers_lora_file.url)
+  var imgArr:any=[]
+  const promprttArr=["a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  "a portrait photo of sksrr man, wearing a black polo tshirt, gym background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  "a portrait photo of sksrr man, wearing a white tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  "a portrait photo of sksrr man, wearing a white tshirt, village background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  "a portrait photo of sksrr man, wearing a sherwani, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  "a portrait photo of sksrr man, wearing a cool tshirt, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++"
+  ]
+
+  // var imgResult:any = await fal.subscribe("fal-ai/flux-lora", {
+  //   input: {
+  //     prompt: "a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  //     image_size: "landscape_4_3",
+  //     num_inference_steps: 28,
+  //     guidance_scale: 3.5,
+  //     num_images: 1,
+  //     enable_safety_checker: true,
+  //     output_format: "jpeg",
+  //     loras: [{
+  //       path: result.diffusers_lora_file.url
+  //     }]
+  //   },
+  //   logs: true,
+  //   onQueueUpdate: (update) => {
+  //     if (update.status === "IN_PROGRESS") {
+  //       update.logs.map((log) => log.message).forEach(console.log);
+  //     }
+  //   },
+  // });
+  // console.log(imgResult)
+  var shot:any;
+  for(var i=0;i<promprttArr.length;i++){
+    var imgResult:any =await fal.subscribe("fal-ai/flux-lora", {
+        input: {
+          prompt: promprttArr[i],
+          image_size: "landscape_4_3",
+          num_inference_steps: 28,
+          guidance_scale: 3.5,
+          num_images: 1,
+          enable_safety_checker: true,
+          output_format: "jpeg",
+          loras: [{
+            path: result.diffusers_lora_file.url
+          }]
+        },
+        logs: true,
+        onQueueUpdate: (update) => {
+          if (update.status === "IN_PROGRESS") {
+            update.logs.map((log) => log.message).forEach(console.log);
+          }
+        },
+      });
+      console.log(imgResult)
+    
+        shot = await db.shot.create({
+         data: {
+           prompt:promprttArr[i],
+         
+           replicateId: "adichividuuu",
+           status: "starting",
+           projectId: project.id,
+           outputUrl:imgResult.images[0].url
+         },
+       });
+       console.log(shot)
+     
+
+      imgArr.push(imgResult)
+  }
 
   // const response = await replicate.hardware.list()
   // console.log(response)
@@ -44,33 +159,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   
 // )
 // console.log(model)
-const training = await replicate.trainings.create(
-  "ostris",
-  "flux-dev-lora-trainer",
-  "885394e6a31c6f349dd4f9e6e7ffbabd8d9840ab2559ab78aed6b2451ab2cfef",
-  {
-    // You need to create a model on Replicate that will be the destination for the trained version.
-    destination: "magicofspade/photoshottest1",
-    input: {
-      steps: 1000,
-      lora_rank: 16,
-      optimizer: "adamw8bit",
-      batch_size: 1,
-      resolution: "512,768,1024",
-      autocaption: true,
-      input_images: "https://hedshottempbucket.s3.ap-south-1.amazonaws.com/rahulsample.zip",
-      trigger_word: "sksrr",
-      learning_rate: 0.0004,
-      wandb_project: "flux_train_replicate",
-      wandb_save_interval: 100,
-      caption_dropout_rate: 0.05,
-      cache_latents_to_disk: false,
-      wandb_sample_interval: 100
-    }
-  }
-);
+// const training = await replicate.trainings.create(
+//   "ostris",
+//   "flux-dev-lora-trainer",
+//   "885394e6a31c6f349dd4f9e6e7ffbabd8d9840ab2559ab78aed6b2451ab2cfef",
+//   {
+//     // You need to create a model on Replicate that will be the destination for the trained version.
+//     destination: "magicofspade/photoshottest1",
+//     input: {
+//       steps: 1000,
+//       lora_rank: 16,
+//       optimizer: "adamw8bit",
+//       batch_size: 1,
+//       resolution: "512,768,1024",
+//       autocaption: true,
+//       input_images: "https://hedshottempbucket.s3.ap-south-1.amazonaws.com/rahulsample.zip",
+//       trigger_word: "sksrr",
+//       learning_rate: 0.0004,
+//       wandb_project: "flux_train_replicate",
+//       wandb_save_interval: 100,
+//       caption_dropout_rate: 0.05,
+//       cache_latents_to_disk: false,
+//       wandb_sample_interval: 100
+//     }
+//   }
+// );
 
- console.log(training)
+//  console.log(training)
 
 // const response1 = await replicate.trainings.get("emkzzwhh8srm00cj3tdr3eb738");
 // console.log(response1)
@@ -115,13 +230,19 @@ const training = await replicate.trainings.create(
   // );
 
   // const replicateModelId = responseReplicate.data.id as string;
-  const replicateModelId = training.id as string;
+  
+  
+  //const replicateModelId = training.id as string;
 
-  project = await db.project.update({
+  // project = await db.project.update({
+  //   where: { id: project.id },
+  //   data: { replicateModelId: replicateModelId , modelStatus: "processing" },
+  // });
+
+    project = await db.project.update({
     where: { id: project.id },
-    data: { replicateModelId: replicateModelId , modelStatus: "processing" },
+    data: { falUrl: result.diffusers_lora_file.url , modelStatus: "succeeded" },
   });
-
   return res.json({ project });
 };
 

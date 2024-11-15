@@ -72,6 +72,7 @@ model Project {
   stripePaymentId     String?
   modelVersionId      String?
   modelStatus         String?
+  falUrl              String?
   instanceName        String
   instanceClass       String
   imageUrls           String[]
