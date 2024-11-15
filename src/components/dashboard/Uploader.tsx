@@ -29,7 +29,8 @@ import AvatarsPlaceholder from "../home/AvatarsPlaceholder";
 import { CheckedListItem } from "../home/Pricing";
 import UploadErrorMessages from "./UploadErrorMessages";
 import JSZip from "jszip";
-import {saveAs } from 'file-saver'
+
+
 
 
 type TUploadState = "not_uploaded" | "uploading" | "uploaded";
