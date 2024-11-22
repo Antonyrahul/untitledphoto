@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     verifyRequest: "/login?verifyRequest=1",
   },
-  secret:"nadhandasecret",
+  secret: process.env.SECRET,
 };
 
 export default NextAuth(authOptions);
