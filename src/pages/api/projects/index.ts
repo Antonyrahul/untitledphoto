@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log("the session is",session)
 
   if (!session?.user) {
+    console.log("ther user json is",session?.user)
     return res.status(401).json({ message: "Not authenticated" });
   }
 
