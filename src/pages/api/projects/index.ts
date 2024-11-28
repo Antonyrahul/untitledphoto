@@ -10,7 +10,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
-  console.log(session)
+  console.log("the session is",session)
 
   if (!session?.user) {
     return res.status(401).json({ message: "Not authenticated" });
