@@ -18,6 +18,7 @@ export const sendEmail = async ({
   component: ReactElement;
 }) => {
   const { html } = render(component);
+  console.log(html)
 
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,

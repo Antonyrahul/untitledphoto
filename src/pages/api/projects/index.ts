@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getSession} from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 import db from "@/core/db";
 import { createZipFolder } from "@/core/utils/assets";
 import s3Client from "@/core/clients/s3";
@@ -7,14 +8,22 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import replicateClient from "@/core/clients/replicate";
 import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession({ req });
-  console.log("the session is",session)
+  //const session = await getSession({ req });
+  const token= await getToken({req})
+  //const session = await getSession({req});
+  const session= await getServerSession(req,res,authOptions)
+  //console.log("serversession is ",serverSession)
+  console.log("the session in index is",session)
+  console.log("the token is",token)
+
 
   if (!session?.user) {
     console.log("ther user json is",session?.user)
-   // return res.status(401).json({ message: "Not authenticated" });
+    return res.status(401).json({ message: "Not authenticated" });
   }
 
   if (req.method === "POST") {
@@ -22,12 +31,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const studioName = req.body.studioName as string;
     const instanceClass = req.body.instanceClass as string;
     
-  
+  console.log("inga vandachu")
     const project = await db.project.create({
       data: {
         imageUrls: urls,
         name: studioName,
-        userId: session.userId,
+        userId: session?.userId,
         modelStatus: "not_created",
         instanceClass: instanceClass || "person",
         instanceName: process.env.NEXT_PUBLIC_REPLICATE_INSTANCE_TOKEN!,

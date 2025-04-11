@@ -8,6 +8,8 @@ import * as fal from "@fal-ai/serverless-client";
 import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Shot } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]";
 
 fal.config({
   credentials: process.env.FAL_KEY,
@@ -15,7 +17,10 @@ fal.config({
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const projectId = req.query.id as string;
-  const session = await getSession({ req });
+  //const session = await getSession({ req });
+  const session= await getServerSession(req,res,authOptions)
+
+  console.log("the session in train ts is ",session)
 
   if (!session?.user) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -24,20 +29,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let project = await db.project.findFirstOrThrow({
     where: {
       id: projectId,
-      userId: session.userId,
+      //userId: session.userId,
+      userId:session.userId,
       modelStatus: "not_created",
       NOT: { stripePaymentId: null },
     },
   });
 
   const instanceClass = getRefinedInstanceClass(project.instanceClass);
-  const replicate = new Replicate({
-    // get your token from https://replicate.com/account/api-tokens
-    auth: process.env.REPLICATE_API_TOKEN, // defaults to process.env.REPLICATE_API_TOKEN
-    baseURl:"https://api.replicate.com/v1"
-  });
+  // const replicate = new Replicate({
+  //   // get your token from https://replicate.com/account/api-tokens
+  //   auth: process.env.REPLICATE_API_TOKEN, // defaults to process.env.REPLICATE_API_TOKEN
+  //   baseURl:"https://api.replicate.com/v1"
+  // });
 
-  const response = await replicate.models.versions.list("magicofspade","photoshottest1");
+  //const response = await replicate.models.versions.list("magicofspade","photoshottest1");
   const accessKeyId=process.env.S3_UPLOAD_KEY ?? ""
   const secretAccessKey=process.env.S3_UPLOAD_SECRET ?? ""
 
@@ -57,7 +63,7 @@ var command:any = new GetObjectCommand({
 })
 var sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
 console.log(sigedurl)
-  console.log(response)
+  //console.log(response)
   const result:any = await fal.subscribe("fal-ai/flux-lora-fast-training", {
     input: {
       images_data_url: sigedurl,
@@ -79,12 +85,20 @@ console.log(sigedurl)
   console.log(result)
   console.log(result.diffusers_lora_file.url)
   var imgArr:any=[]
-  const promprttArr=["a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
-  "a portrait photo of sksrr man, wearing a black polo tshirt, gym background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
-  "a portrait photo of sksrr man, wearing a white tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
-  "a portrait photo of sksrr man, wearing a white tshirt, village background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
-  "a portrait photo of sksrr man, wearing a sherwani, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
-  "a portrait photo of sksrr man, wearing a cool tshirt, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++"
+  // const promprttArr=["a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  // "a portrait photo of sksrr man, wearing a black polo tshirt, gym background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  // "a portrait photo of sksrr man, wearing a white tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  // "a portrait photo of sksrr man, wearing a white tshirt, village background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  // "a portrait photo of sksrr man, wearing a sherwani, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
+  // "a portrait photo of sksrr man, wearing a cool tshirt, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++"
+  // ]
+
+  const promprttArr=["A noble Victorian sksrr gentleman standing in an opulent 19th-century study, dressed in a tailored dark navy frock coat, a gold pocket watch hanging from his vest, and a silk cravat. Sunlight streams through the tall windows, illuminating the fine details of the room’s antique furniture. Hyper-realistic, ultra-HD, photorealistic textures",
+  "A rugged sksrr cowboy standing in the middle of a vast desert, dressed in a weathered brown leather jacket, cowboy hat, and boots. His revolver holstered at his side, he looks into the distance as the sun sets behind him, casting a golden glow over the dunes. 16K resolution, ultra-sharp detail, cinematic Western style",
+  "A powerful Norse sksrr warrior in a frozen landscape, wearing detailed battle armor made of steel and fur. His long hair flows in the wind as he grips a massive axe, snowflakes falling around him. Behind him, a towering Viking ship rests on icy waters. Epic fantasy realism, ultra-HD, 8K textures",
+  "A modern sksrr businessman in a sleek, tailored black suit walking confidently through a futuristic glass cityscape at sunset. The reflection of the skyline glows on the skyscrapers as he adjusts his cufflinks. The scene captures motion and elegance with a shallow depth of field. Photorealistic, ultra-HD, stylish",
+  "A mysterious sksrr samurai in a misty bamboo forest, wearing a traditional dark blue kimono with golden embroidery. His katana is drawn slightly, reflecting the dim moonlight filtering through the leaves. The atmosphere is serene yet tense, capturing ancient warrior spirit. 8K ultra-realistic, cinematic",
+  "A heroic sksrr firefighter emerging from the smoke, wearing a soot-covered yellow fire-resistant suit and helmet with a reflective visor. The glow of embers illuminates his determined expression as water sprays from a nearby hose. Ultra-realistic, high-action shot, 12K resolution, dramatic lighting."
   ]
 
   // var imgResult:any = await fal.subscribe("fal-ai/flux-lora", {
