@@ -64,7 +64,7 @@ var command:any = new GetObjectCommand({
 var sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
 console.log(sigedurl)
   //console.log(response)
-  const result:any = await fal.subscribe("fal-ai/flux-lora-fast-training", {
+  const result = await fal.queue.submit("fal-ai/flux-lora-fast-training", {
     input: {
       images_data_url: sigedurl,
       steps: 1000,
@@ -75,16 +75,41 @@ console.log(sigedurl)
       experimental_multi_checkpoints_count: 1,
       trigger_word: "sksrr"
     },
-    logs: true,
-    onQueueUpdate: (update) => {
-      if (update.status === "IN_PROGRESS") {
-        update.logs.map((log) => log.message).forEach(console.log);
-      }
-    },
+    webhookUrl: process.env.NEXTAUTH_URL+"/api/webhook",
   });
+  //const result= request_id
   console.log(result)
-  console.log(result.diffusers_lora_file.url)
+
+  project = await db.project.update({
+    where: { id: project.id },
+    data: { falReqIDT: result.request_id , modelStatus: "inprogress" },
+  });
+
+
+
+  // const result:any = await fal.subscribe("fal-ai/flux-lora-fast-training", {
+  //   input: {
+  //     images_data_url: sigedurl,
+  //     steps: 1000,
+  //     rank: 16,
+  //     learning_rate: 0.0004,
+  //     caption_dropout_rate: 0.05,
+  //     experimental_optimizers: "adamw8bit",
+  //     experimental_multi_checkpoints_count: 1,
+  //     trigger_word: "sksrr"
+  //   },
+  //   logs: true,
+  //   onQueueUpdate: (update) => {
+  //     if (update.status === "IN_PROGRESS") {
+  //       update.logs.map((log) => log.message).forEach(console.log);
+  //     }
+  //   },
+  // });
+  // console.log(result)
+  // console.log(result.diffusers_lora_file.url)
   var imgArr:any=[]
+  
+  
   // const promprttArr=["a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
   // "a portrait photo of sksrr man, wearing a black polo tshirt, gym background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
   // "a portrait photo of sksrr man, wearing a white tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
@@ -93,6 +118,9 @@ console.log(sigedurl)
   // "a portrait photo of sksrr man, wearing a cool tshirt, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++"
   // ]
 
+ 
+ 
+ 
   const promprttArr=["A noble Victorian sksrr gentleman standing in an opulent 19th-century study, dressed in a tailored dark navy frock coat, a gold pocket watch hanging from his vest, and a silk cravat. Sunlight streams through the tall windows, illuminating the fine details of the room’s antique furniture. Hyper-realistic, ultra-HD, photorealistic textures",
   "A rugged sksrr cowboy standing in the middle of a vast desert, dressed in a weathered brown leather jacket, cowboy hat, and boots. His revolver holstered at his side, he looks into the distance as the sun sets behind him, casting a golden glow over the dunes. 16K resolution, ultra-sharp detail, cinematic Western style",
   "A powerful Norse sksrr warrior in a frozen landscape, wearing detailed battle armor made of steel and fur. His long hair flows in the wind as he grips a massive axe, snowflakes falling around him. Behind him, a towering Viking ship rests on icy waters. Epic fantasy realism, ultra-HD, 8K textures",
@@ -101,6 +129,8 @@ console.log(sigedurl)
   "A heroic sksrr firefighter emerging from the smoke, wearing a soot-covered yellow fire-resistant suit and helmet with a reflective visor. The glow of embers illuminates his determined expression as water sprays from a nearby hose. Ultra-realistic, high-action shot, 12K resolution, dramatic lighting."
   ]
 
+  
+  
   // var imgResult:any = await fal.subscribe("fal-ai/flux-lora", {
   //   input: {
   //     prompt: "a portrait photo of sksrr man, wearing a black tuxedo, emmy background, fit, detailed face, clean and clear face,(flirty smile)+, (looking at the camera)++",
@@ -122,46 +152,63 @@ console.log(sigedurl)
   //   },
   // });
   // console.log(imgResult)
-  var shot:any;
-  for(var i=0;i<promprttArr.length;i++){
-    var imgResult:any =await fal.subscribe("fal-ai/flux-lora", {
-        input: {
-          prompt: promprttArr[i],
-          image_size: "landscape_4_3",
-          num_inference_steps: 28,
-          guidance_scale: 3.5,
-          num_images: 1,
-          enable_safety_checker: true,
-          output_format: "jpeg",
-          loras: [{
-            path: result.diffusers_lora_file.url
-          }]
-        },
-        logs: true,
-        onQueueUpdate: (update) => {
-          if (update.status === "IN_PROGRESS") {
-            update.logs.map((log) => log.message).forEach(console.log);
-          }
-        },
-      });
-      console.log(imgResult)
+  
+  
+  
+ 
+ 
+  // var shot:any;
+  // for(var i=0;i<promprttArr.length;i++){
+  //   var imgResult:any =await fal.subscribe("fal-ai/flux-lora", {
+  //       input: {
+  //         prompt: promprttArr[i],
+  //         image_size: "landscape_4_3",
+  //         num_inference_steps: 28,
+  //         guidance_scale: 3.5,
+  //         num_images: 1,
+  //         enable_safety_checker: true,
+  //         output_format: "jpeg",
+  //         loras: [{
+  //           path: result.diffusers_lora_file.url
+  //         }]
+  //       },
+  //       logs: true,
+  //       onQueueUpdate: (update) => {
+  //         if (update.status === "IN_PROGRESS") {
+  //           update.logs.map((log) => log.message).forEach(console.log);
+  //         }
+  //       },
+  //     });
+  //     console.log(imgResult)
     
-        shot = await db.shot.create({
-         data: {
-           prompt:promprttArr[i],
+  //       shot = await db.shot.create({
+  //        data: {
+  //          prompt:promprttArr[i],
          
-           replicateId: "adichividuuu",
-           status: "starting",
-           projectId: project.id,
-           outputUrl:imgResult.images[0].url
-         },
-       });
-       console.log(shot)
+  //          replicateId: "adichividuuu",
+  //          status: "starting",
+  //          projectId: project.id,
+  //          outputUrl:imgResult.images[0].url
+  //        },
+  //      });
+  //      console.log(shot)
      
 
-      imgArr.push(imgResult)
-  }
+  //     imgArr.push(imgResult)
+  // }
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   // const response = await replicate.hardware.list()
   // console.log(response)
 
@@ -253,11 +300,17 @@ console.log(sigedurl)
   //   data: { replicateModelId: replicateModelId , modelStatus: "processing" },
   // });
 
-    project = await db.project.update({
-    where: { id: project.id },
-    data: { falUrl: result.diffusers_lora_file.url , modelStatus: "succeeded" },
-  });
-  return res.json({ project });
+   
+  
+  
+  
+  
+  
+  // project = await db.project.update({
+  //   where: { id: project.id },
+  //   data: { falUrl: result.diffusers_lora_file.url , modelStatus: "succeeded" },
+  // });
+   return res.json({ project });
 };
 
 export default handler;

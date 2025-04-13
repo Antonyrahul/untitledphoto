@@ -74,6 +74,7 @@ model Project {
   modelVersionId      String?
   modelStatus         String?
   falUrl              String?
+  falReqIDT           String?
   instanceName        String
   instanceClass       String
   imageUrls           String[]
