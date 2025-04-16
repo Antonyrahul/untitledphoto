@@ -13,6 +13,9 @@ export default async function handler(
   const sessionId = req.query.sessionId as string;
   const ppi = req.query.ppi as string;
 
+  console.log(sessionId)
+  console.log(ppi)
+
   const session = await stripe.checkout.sessions.retrieve(sessionId);
 
   if (

@@ -67,12 +67,12 @@ const PromptPanel = ({
           updateShotTemplate(undefined);
         }
       }}
-      borderRadius="xl"
+      // borderRadius="xl"
       p={{ base: 5, md: 7 }}
       mb={10}
-      backgroundColor="white"
+      // backgroundColor="white"
     >
-      <Flex alignItems="center" justifyContent="space-between">
+      {/* <Flex alignItems="center" justifyContent="space-between">
         <Text fontSize="2xl" fontWeight="semibold">
           Studio <b>{getRefinedStudioName(project)}</b>{" "}
           <BuyShotButton
@@ -83,12 +83,12 @@ const PromptPanel = ({
             }}
           />
         </Text>
-      </Flex>
-      <HStack mt={2}>
+      </Flex> */}
+      {/* <HStack mt={2}>
         <PromptsDrawer />
         {hasImageInputAvailable && <PromptImage />}
-      </HStack>
-      <Flex
+      </HStack> */}
+      {/* <Flex
         flexDirection={{ base: "column", md: "row" }}
         gap={{ base: 4, md: 2 }}
         my={4}
@@ -109,7 +109,7 @@ const PromptPanel = ({
             placeholder="a portrait of @me as an astronaut, highly-detailed, trending on artstation"
           />
         </Box>
-      </Flex>
+      </Flex> */}
 
       <Flex gap={2} flexDirection={{ base: "column", sm: "row" }}>
         {promptImageUrl && (
@@ -183,7 +183,7 @@ const PromptPanel = ({
           </HStack>
         )}
 
-        {!shotTemplate && !promptImageUrl && (
+        {/* {!shotTemplate && !promptImageUrl && (
           <Box flex="1">
             <VStack alignItems="flex-start">
               <Text color="beige.500" fontSize="sm">
@@ -192,8 +192,8 @@ const PromptPanel = ({
               </Text>
             </VStack>
           </Box>
-        )}
-        <Button
+        )} */}
+        {/* <Button
           disabled={shotCredits === 0}
           type="submit"
           size="lg"
@@ -202,7 +202,7 @@ const PromptPanel = ({
           isLoading={isCreatingPrediction}
         >
           {shotCredits === 0 ? "No more shot" : "Shoot"}
-        </Button>
+        </Button> */}
       </Flex>
     </Flex>
   );

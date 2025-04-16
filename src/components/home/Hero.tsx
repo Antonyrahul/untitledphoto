@@ -13,12 +13,12 @@ const Hero = () => {
         flexDirection="column"
         marginX="auto"
         maxWidth="container.lg"
-        columns={{ base: 1, lg: 2 }}
+        columns={{ base: 1, lg: 1 }}
         px={{ base: 4, lg: 0 }}
         py={{ base: 10, lg: 0 }}
         gap={{ base: 10, lg: 0 }}
       >
-        <VStack
+        {/* <VStack
           className="color"
           alignItems={{ base: "center", sm: "flex-start" }}
           spacing={10}
@@ -34,7 +34,7 @@ const Hero = () => {
               fontSize={{ base: "2.6rem", sm: "4rem" }}
               fontWeight="black"
             >
-              Your AI avatar generator
+              Your Headshot Generator
             </Box>
             <Box
               as="h2"
@@ -56,10 +56,10 @@ const Hero = () => {
           >
             Start Creating Now
           </Button>
-        </VStack>
-        <Flex alignItems="center">
+        </VStack> */}
+        {/* <Flex alignItems="center">
           <Demo />
-        </Flex>
+        </Flex> */}
       </SimpleGrid>
     </Box>
   );

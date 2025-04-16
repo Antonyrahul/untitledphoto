@@ -33,12 +33,12 @@ const Header = () => {
           fontWeight="bold"
           fontSize="2xl"
         >
-          <Icon
+          {/* <Icon
             transition="200ms all"
             _groupHover={{ color: "brand.500" }}
             as={IoIosFlash}
-          />
-          <Text display={{ base: "none", sm: "inherit" }}>Photoshot.</Text>
+          /> */}
+          <Text display={{ base: "none", sm: "inherit" }}>UntitledOne.</Text>
         </Flex>
         <HStack spacing={1}>
           <Button

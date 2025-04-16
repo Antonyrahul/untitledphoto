@@ -10,10 +10,10 @@ export default function Home() {
       <Flex flexDirection="column" marginX="auto" flex="1">
         <Hero />
       </Flex>
-      <Slider />
-      <Features />
+      {/* <Slider /> */}
+      {/* <Features /> */}
       <Flex px={4} py={10} maxWidth="container.lg" width="100%" marginX="auto">
-        <Pricing />
+        {/* <Pricing /> */}
       </Flex>
     </>
   );

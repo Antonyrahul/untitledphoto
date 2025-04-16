@@ -1,9 +1,9 @@
 import Head from "next/head";
 import React from "react";
 
-const title = "Generate Custom AI avatar - Photoshot";
+const title = "Generate beautiful headshots - UntitledOne";
 const description =
-  "Generate AI avatars that perfectly capture your unique style. Write a prompt and let our Dreambooth and Stable diffusion technology do the rest.";
+  "Generate beautiful headshots with our unique headshot generator.";
 const image = "https://photoshot.app/og-cover.jpg";
 
 const DefaultHead = () => (

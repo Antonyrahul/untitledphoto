@@ -9,7 +9,8 @@ const theme = extendTheme({
       200: "#FFFFFF",
       300: "#FFFFFF",
       400: "#DEFFEE",
-      500: "#B5FFD9",
+      // 500: "#B5FFD9",
+      500: "#000000",
       600: "#7DFFBC",
       700: "#45FF9F",
       800: "#0DFF83",
@@ -45,7 +46,7 @@ const theme = extendTheme({
         brand: {
           transition: "all 0.2s",
           bg: "brand.500",
-          color: "blackAlpha.700",
+          color: "#FFFFFF",
           shadow: "lg",
           borderWidth: "1px",
           borderColor: "blackAlpha.100",

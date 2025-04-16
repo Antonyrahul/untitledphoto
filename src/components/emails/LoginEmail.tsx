@@ -16,22 +16,16 @@ export default function LoginEmail({ url }: { url: string }): JSX.Element {
         <MjmlWrapper>
           <MjmlSection>
             <MjmlColumn>
-              <MjmlImage
-                padding="12px 0 24px"
-                width="70px"
-                height="70px"
-                align="center"
-                src="https://photoshot.app/favicon.png"
-              />
+
               <MjmlText fontWeight={800} fontSize={20} align="center">
-                Your Photoshot Login Link
+                Your UntitledOne Login Link
               </MjmlText>
             </MjmlColumn>
           </MjmlSection>
           <MjmlSection>
             <MjmlColumn>
               <MjmlText>
-                Welcome to Photoshot! Please click the magic link below to sign
+                Welcome to UntitledOne! Please click the magic link below to sign
                 in to your account.
               </MjmlText>
               <>

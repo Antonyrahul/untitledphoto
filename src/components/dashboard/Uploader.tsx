@@ -186,9 +186,9 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
           {...getRootProps({ className: "dropzone" })}
         >
           <input {...getInputProps()} />
-          <Box mb={4} position="relative">
+          {/* <Box mb={4} position="relative">
             <AvatarsPlaceholder character="sacha" />
-          </Box>
+          </Box> */}
           <VStack textAlign="center" spacing={1}>
             <Box fontWeight="bold" fontSize="2xl">
               Drag and drop or click to upload
@@ -196,7 +196,7 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
             <Box fontWeight="bold" fontSize="lg">
               <Highlight
                 query="10-20 pictures"
-                styles={{ bg: "brand.500", px: 1 }}
+                styles={{ bg: "brand.300", px: 1 }}
               >
                 Upload 10-20 pictures of you
               </Highlight>
