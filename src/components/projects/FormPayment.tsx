@@ -73,7 +73,7 @@ const FormPayment = ({
    };
 
 
-   const processPayment = async (e: React.FormEvent<HTMLFormElement>) => {
+   const processPayment:any = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("in payment")
     try {
