@@ -4,7 +4,7 @@ import React from "react";
 const title = "Generate beautiful headshots - Superrshots";
 const description =
   "Generate beautiful headshots with our unique headshot generator.";
-const image = "https://photoshot.app/og-cover.jpg";
+const image = "https://hedshottempbucket.s3.ap-south-1.amazonaws.com/superrshot.jpg";
 
 const DefaultHead = () => (
   <Head>
