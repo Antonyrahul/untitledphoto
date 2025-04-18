@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const key = imageUrl.split(
         `https://${process.env.S3_UPLOAD_BUCKET}.s3.${process.env.S3_UPLOAD_REGION}.amazonaws.com/`
       )[1];
+      console.log("delete key",key)
 
       await s3Client.send(
         new DeleteObjectCommand({

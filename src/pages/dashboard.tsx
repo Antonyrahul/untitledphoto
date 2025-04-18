@@ -23,7 +23,7 @@ export default function Home() {
     <PageContainer>
       <Box>
         <Heading as="h2" mb={4} fontWeight="semibold" fontSize="2xl">
-          Create a new Studio
+          Create a new Headshot
         </Heading>
         <Uploader
           handleOnAdd={() => {
@@ -34,13 +34,13 @@ export default function Home() {
 
       <Box mt={10}>
         <Heading as="h2" mb={4} fontWeight="semibold" fontSize="2xl">
-          My Studios
+          My Headshots
         </Heading>
 
         {isLoading && (
           <Center width="100%" textAlign="center">
             <Spinner mr={3} size="sm" speed="1s" />
-            <Text>Loading studios</Text>
+            <Text>Loading headshots</Text>
           </Center>
         )}
 
@@ -53,7 +53,7 @@ export default function Home() {
             color="blackAlpha.700"
             textAlign="center"
           >
-            <Text backgroundColor="white">No studio available yet</Text>
+            <Text backgroundColor="white">No headshots available yet</Text>
           </Center>
         )}
 

@@ -16,15 +16,15 @@ const Terms = () => {
         alignItems="flex-start"
       >
         <Text fontWeight="bold" fontSize="3xl">
-          UntitledOne Privacy Policy
+          Superrshots Privacy Policy
         </Text>
 
         <Text>
-          It is UntitledOne&#39;s policy to respect your privacy and comply with
+          It is Superrshots&#39;s policy to respect your privacy and comply with
           any applicable law and regulation regarding any personal information
           we may collect about you, including across our website,{" "}
-          <Link textDecoration="underline" href="https://untitledone.in/">
-            https://Untitled1.in/
+          <Link textDecoration="underline" href="https://Superrshots.in/">
+            https://Superrshots.in/
           </Link>
           , and other sites we own and operate.{" "}
         </Text>
@@ -90,7 +90,7 @@ const Terms = () => {
           Collection and Use of Information
         </Text>
         <Text>
-          By accessing and using UntitledOne, you are also using the Replicate
+          By accessing and using Superrshots, you are also using the Replicate
           service and thereby accepting the terms of use outlined at
           <Link ml={1} href="https://replicate.com/privacy">
             https://replicate.com/privacy
@@ -178,7 +178,7 @@ const Terms = () => {
         <Text>
           To request that your account and all associated data be deleted,
           please send an email to{" "}
-          <Link href="mailto:antonyrahul@untitled1.in">support@UntitledOne</Link>. Please
+          <Link href="mailto:support@Superrshots.in">support@Superrshots</Link>. Please
           note that by deleting your account, you will no longer have access to
           any of the data or content associated with your account.
         </Text>
@@ -325,7 +325,7 @@ const Terms = () => {
         <Text>
           For any questions or concerns regarding your privacy, you may contact
           us using the following details:{" "}
-          <Link href="mailto:antonyrahul@untitled1.in">support@UntitiledOne.in</Link>
+          <Link href="mailto:support@Superrshots.in">support@UntitiledOne.in</Link>
         </Text>
       </VStack>
     </PageContainer>

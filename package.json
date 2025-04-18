@@ -12,7 +12,7 @@
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.377.0",
+    "@aws-sdk/client-s3": "^3.787.0",
     "@aws-sdk/s3-request-presigner": "^3.223.0",
     "@chakra-ui/react": "^2.4.2",
     "@emotion/react": "^11.10.5",

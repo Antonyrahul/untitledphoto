@@ -30,6 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const urls = req.body.urls as string[];
     const studioName = req.body.studioName as string;
     const instanceClass = req.body.instanceClass as string;
+    console.log("instance class in create",instanceClass)
     
   console.log("inga vandachu")
     const project = await db.project.create({

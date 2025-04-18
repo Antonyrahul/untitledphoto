@@ -36,7 +36,7 @@ import JSZip from "jszip";
 type TUploadState = "not_uploaded" | "uploading" | "uploaded";
 export type FilePreview = (File | Blob) & { preview: string };
 
-const MAX_FILES = 25;
+const MAX_FILES = 30;
 
 const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
   const [files, setFiles] = useState<FilePreview[]>([]);

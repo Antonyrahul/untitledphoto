@@ -13,7 +13,7 @@ const Gallery = ({
 }) => {
   return (
     <PageContainer>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={6}>
+      {/* <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={6}>
         {shots.map((shot) => (
           <Box
             key={shot.outputUrl}
@@ -35,8 +35,8 @@ const Gallery = ({
             />
           </Box>
         ))}
-      </SimpleGrid>
-      {shots.length === 0 && (
+      </SimpleGrid> */}
+      {/* {shots.length === 0 && (
         <Box
           borderRadius="xl"
           p={10}
@@ -45,7 +45,7 @@ const Gallery = ({
         >
           No shots in this gallery
         </Box>
-      )}
+      )} */}
     </PageContainer>
   );
 };

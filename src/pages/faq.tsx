@@ -69,12 +69,12 @@ const Terms = () => {
         <Text>
           To request that your account and all associated data be deleted,
           please send an email to{" "}
-          <Link href="mailto:antonyrahul@untitled1.in">support@untitledOne</Link>. Please
+          <Link href="mailto:support@Superrshots.in">support@Superrshots</Link>. Please
           note that by deleting your account, you will no longer have access to
           any of the data or content associated with your account.
         </Text>
         <Text>
-          Please be aware that only the data on UntitledOne servers will be
+          Please be aware that only the data on Superrshots servers will be
           deleted. Data that was transmitted to our partner will not be deleted.
           You would have to contact them in order to do so, according to their{" "}
           

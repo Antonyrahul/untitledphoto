@@ -7,7 +7,7 @@ const HowItWorks = () => {
   return (
     <PageContainer maxWidth="container.md">
       <Head>
-        <title>AI Avatar: how it works - UntitledOne</title>
+        <title>AI Avatar: how it works - Superrshots</title>
       </Head>
 
       <VStack

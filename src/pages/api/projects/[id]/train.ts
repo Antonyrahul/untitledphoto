@@ -37,6 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   const instanceClass = getRefinedInstanceClass(project.instanceClass);
+  console.log('the instance class is ',instanceClass)
   // const replicate = new Replicate({
   //   // get your token from https://replicate.com/account/api-tokens
   //   auth: process.env.REPLICATE_API_TOKEN, // defaults to process.env.REPLICATE_API_TOKEN

@@ -38,10 +38,10 @@ const Header = () => {
             _groupHover={{ color: "brand.500" }}
             as={IoIosFlash}
           /> */}
-          <Text display={{ base: "none", sm: "inherit" }}>UntitledOne.</Text>
+          <Text display={{ base: "none", sm: "inherit" }}>Superrshots.</Text>
         </Flex>
         <HStack spacing={1}>
-          <Button
+          {/* <Button
             as={Link}
             href="/prompts"
             colorScheme="beige"
@@ -49,10 +49,10 @@ const Header = () => {
             size="sm"
           >
             Prompts
-          </Button>
+          </Button> */}
           {session ? (
             <>
-              <Tooltip hasArrow label="Public gallery">
+              {/* <Tooltip hasArrow label="Public gallery">
                 <Button
                   href={`/gallery/${session.userId}`}
                   as={Link}
@@ -62,7 +62,7 @@ const Header = () => {
                 >
                   My Gallery
                 </Button>
-              </Tooltip>
+              </Tooltip> */}
               <Button href="/dashboard" as={Link} variant="brand" size="sm">
                 Dashboard
               </Button>

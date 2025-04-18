@@ -18,14 +18,14 @@ export default function LoginEmail({ url }: { url: string }): JSX.Element {
             <MjmlColumn>
 
               <MjmlText fontWeight={800} fontSize={20} align="center">
-                Your UntitledOne Login Link
+                Your Superrshots Login Link
               </MjmlText>
             </MjmlColumn>
           </MjmlSection>
           <MjmlSection>
             <MjmlColumn>
               <MjmlText>
-                Welcome to UntitledOne! Please click the magic link below to sign
+                Welcome to Superrshots! Please click the magic link below to sign
                 in to your account.
               </MjmlText>
               <>

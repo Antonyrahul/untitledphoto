@@ -10,25 +10,107 @@ export default async function handler(req:any, res:any) {
         where: { falReqIDT: payload.request_id },
     
       });
+     
+      const instanceClass = projects.instanceClass;
+      console.log("webhook instance calss",instanceClass)
 
       console.log("webhook projects find",projects)
       // Do something with the payload (e.g., log it or save it in the database)
       console.log('Webhook received:', payload);
       var imgArr:any=[]
-      const promprttArr=["A noble Victorian sksrr gentleman standing in an opulent 19th-century study, dressed in a tailored dark navy frock coat, a gold pocket watch hanging from his vest, and a silk cravat. Sunlight streams through the tall windows, illuminating the fine details of the room’s antique furniture. Hyper-realistic, ultra-HD, photorealistic textures",
-      "A rugged sksrr cowboy standing in the middle of a vast desert, dressed in a weathered brown leather jacket, cowboy hat, and boots. His revolver holstered at his side, he looks into the distance as the sun sets behind him, casting a golden glow over the dunes. 16K resolution, ultra-sharp detail, cinematic Western style",
-      "A powerful Norse sksrr warrior in a frozen landscape, wearing detailed battle armor made of steel and fur. His long hair flows in the wind as he grips a massive axe, snowflakes falling around him. Behind him, a towering Viking ship rests on icy waters. Epic fantasy realism, ultra-HD, 8K textures",
-      "A modern sksrr businessman in a sleek, tailored black suit walking confidently through a futuristic glass cityscape at sunset. The reflection of the skyline glows on the skyscrapers as he adjusts his cufflinks. The scene captures motion and elegance with a shallow depth of field. Photorealistic, ultra-HD, stylish",
-      "A mysterious sksrr samurai in a misty bamboo forest, wearing a traditional dark blue kimono with golden embroidery. His katana is drawn slightly, reflecting the dim moonlight filtering through the leaves. The atmosphere is serene yet tense, capturing ancient warrior spirit. 8K ultra-realistic, cinematic",
-      "A heroic sksrr firefighter emerging from the smoke, wearing a soot-covered yellow fire-resistant suit and helmet with a reflective visor. The glow of embers illuminates his determined expression as water sprays from a nearby hose. Ultra-realistic, high-action shot, 12K resolution, dramatic lighting."
+      
+      // const promprttArr=["A noble Victorian sksrr gentleman standing in an opulent 19th-century study, dressed in a tailored dark navy frock coat, a gold pocket watch hanging from his vest, and a silk cravat. Sunlight streams through the tall windows, illuminating the fine details of the room’s antique furniture. Hyper-realistic, ultra-HD, photorealistic textures",
+      // "A rugged sksrr cowboy standing in the middle of a vast desert, dressed in a weathered brown leather jacket, cowboy hat, and boots. His revolver holstered at his side, he looks into the distance as the sun sets behind him, casting a golden glow over the dunes. 16K resolution, ultra-sharp detail, cinematic Western style",
+      // "A powerful Norse sksrr warrior in a frozen landscape, wearing detailed battle armor made of steel and fur. His long hair flows in the wind as he grips a massive axe, snowflakes falling around him. Behind him, a towering Viking ship rests on icy waters. Epic fantasy realism, ultra-HD, 8K textures",
+      // "A modern sksrr businessman in a sleek, tailored black suit walking confidently through a futuristic glass cityscape at sunset. The reflection of the skyline glows on the skyscrapers as he adjusts his cufflinks. The scene captures motion and elegance with a shallow depth of field. Photorealistic, ultra-HD, stylish",
+      // "A mysterious sksrr samurai in a misty bamboo forest, wearing a traditional dark blue kimono with golden embroidery. His katana is drawn slightly, reflecting the dim moonlight filtering through the leaves. The atmosphere is serene yet tense, capturing ancient warrior spirit. 8K ultra-realistic, cinematic",
+      // "A heroic sksrr firefighter emerging from the smoke, wearing a soot-covered yellow fire-resistant suit and helmet with a reflective visor. The glow of embers illuminates his determined expression as water sprays from a nearby hose. Ultra-realistic, high-action shot, 12K resolution, dramatic lighting."
+      // ]
+      const malePrompts = [
+        "Sksrr model wearing a well-fitted grey suit with a light grey textured tie and a crisp white shirt, standing confidently in front of large floor-to-ceiling windows with a blurred cityscape in the background. The natural light softly illuminates his face, highlighting his sharp features and well-groomed beard, creating a professional and polished look perfect for a corporate or LinkedIn profile photo. The overall style is modern and sophisticated, with a touch of elegance that reflects a strong, confident presence in an urban setting.",
+  "Sksrr model dressed in a classic black suit and white shirt, standing against a soft gradient background in shades of blue and grey. His expression is serious yet welcoming, with the clean and simple background keeping the focus on his professional appearance.",
+  "Sksrr Model leaning slightly forward, dressed in smart casual attire, such as a blazer over a white shirt, with a clean, white background. The expression is bold and confident, reflecting the entrepreneurial spirit and readiness to take action. The simplicity of the background keeps the focus on the model’s determined gaze.",
+  "Sksrr model sitting, close-up portrait, dressed in a formal business suit, against a solid navy or dark gray background, posture is upright and confident, with the simple, dark background adding a touch of elegance and authority.",
+  "Sksrr model standing confidently with arms crossed in front of a large window overlooking a city skyline, model is dressed in a sharp, tailored suit, with a neutral, modern office background that emphasizes professionalism and leadership.",
+  "Sksrr Model standing in a minimalist office with a white desk, modern chairs, and plants in the background. The model is wearing a fitted blazer and smiling, giving a sense of calm and professionalism in a clean, organized environment.",
+  "Sksrr Model standing confidently in a well-fitted suit, with a strong, professional expression. The background is dark gray or navy blue, adding a sense of seriousness and authority. The model’s head is tilted slightly, suggesting both approachability and professionalism, perfect for the legal field.",
+  "Sksrr model dressed in a classic black suit and white shirt, standing against a soft gradient background in shades of blue and grey. His expression is serious yet welcoming, with the clean and simple background keeping the focus on his professional appearance.",
+  "Sksrr model dressed in a sharp, double-breasted navy suit with gold buttons and a crisp white pocket square, standing confidently by the edge of a picturesque lake in a luxurious European town. The background features elegant, pastel-colored villas nestled among lush green hills, with the calm water reflecting the beautiful surroundings. The model’s poised expression and impeccable style exude sophistication and timeless elegance, perfectly capturing the essence of refined luxury in a stunning, scenic location.",
+  "Sksrr model exuding classic Ivy League style, dressed in a refined, preppy ensemble perfect for a day at an exclusive country club. Wearing a tailored light khaki quarter-zip sweater layered over a crisp, navy collared shirt, paired with well-fitted cream chinos. The outfit embodies the old-money aesthetic with its subtle, yet luxurious details, reminiscent of Ralph Lauren’s timeless elegance. The lush, manicured greenery of the background adds to the elite, neo-prep atmosphere, capturing the essence of a modern-day Gatsby or a character straight out of a Gossip Girl scene.",
+  "Portrait of sksrr model seated in a luxurious leather armchair in a grand library, surrounded by floor-to-ceiling bookshelves filled with leather-bound volumes. Model is wearing a classic three-piece suit with a pocket watch, under the warm glow of a crystal chandelier.",
+  "Sksrr in dramatic lighting, dark, sophisticated, one hand clenching chin, chessboard, leaning towards chessboard, chess pieces, dark gothic building, stained glass, looking at viewer with fascination.",
+  "A professional headshot of sksrr in a modern office setting, wearing a crisp navy suit. Soft natural lighting from large windows, shallow depth of field, warm color palette.",
+  "Sksrr in a sleek, minimalist studio. High-key lighting, white background, wearing a light gray business casual shirt. Sharp focus on eyes, professional and approachable expression.",
+  "Corporate portrait of sksrr against a textured dark background. Dramatic side lighting, wearing a black turtleneck. Moody and sophisticated atmosphere, perfect for executive profiles.",
+  "Outdoor headshot of sksrr in an urban environment. Golden hour lighting, shallow depth of field with blurred city backdrop. Business casual attire with a pop of color in the tie.",
+  "Professional studio portrait of sksrr with a gradient background from deep blue to teal. Rembrandt lighting, wearing a charcoal suit with a white shirt. Confident and trustworthy expression.",
+  "Sksrr in a creative office space, sitting casually at a modern desk. Soft, diffused lighting, wearing smart casual attire. Vibrant but professional color palette, ideal for tech or startup profiles.",
+  "Classic black and white headshot of sksrr. High contrast lighting, sharp focus on facial features. Timeless and elegant portrait suitable for any professional setting.",
+  "Environmental portrait of sksrr in a sunlit conference room. Wearing a light blue dress shirt, no tie. Soft background blur, warm and inviting atmosphere.",
+  "Studio headshot of sksrr with a bold, colorful background. Professional lighting with a subtle edge light. Modern business attire, friendly and approachable expression. Perfect for personal branding.",
+  "Professional portrait of sksrr in a library or study setting. Warm, ambient lighting from desk lamps. Wearing glasses and a tweed jacket for an intellectual, trustworthy look. Rich, earthy color tones.",
+  "Sksrr model in a crisp white shirt, sitting in a private jet on couch at window, sky visible through large windows, bokeh.",
+  "Sksrr model wearing a tailored dark brown suit with a matching bow tie, and a crisp white dress shirt, standing confidently in a dimly lit, elegant hallway with warm, ambient lighting and chandeliers softly glowing in the background, creating a luxurious atmosphere with a subtle bokeh effect.",
+  "Sksrr model dressed in a classic black suit and white shirt, standing against a soft gradient background in shades of blue and grey. His expression is serious yet welcoming, with the clean and simple background keeping the focus on his professional appearance."
       ]
+
+      
+
+      const femalePrompts = [
+        "Sksrr female Model seated at a desk or standing against a colorful, abstract background, wearing stylish yet professional clothing like a smart jacket with artistic accessories. The model’s expression is thoughtful and expressive, representing creativity and innovation in a business setting.",
+        "Sksrr female model standing against a soft gray gradient background, dressed in a tailored blazer and blouse. The model’s confident smile and neutral background create a timeless, professional look that keeps the focus on the model.",
+        "Sksrr female model in a sophisticated outfit, working late in a dimly lit office, with a soft glow from computer screen illuminating focused face as typing quickly, papers scattered around.",
+        "Sksrr female model in a tailored black blazer over a white blouse, with a confident smile, standing against a soft, neutral-toned background. The close-up headshot highlights professional and approachable demeanor, making it ideal for a LinkedIn profile.",
+        "Sksrr female model in a tailored black blazer over a white blouse, with a confident smile, standing against a soft, neutral-toned background. The close-up headshot highlights professional and approachable demeanor, making it ideal for a LinkedIn profile.",
+        "Sksrr female model standing with arms crossed in front of a corporate building entrance, dressed in a classic, professional suit. The background features the company logo subtly visible, with the model’s confident smile and upright posture reflecting authority and success.",
+        "Close-up portrait of sksrr model standing against a dark gray background, wearing a stylish dark-colored suit with minimal accessories. The dark background contrasts with the model’s outfit and features, creating a sleek and modern business portrait.",
+        "Sksrr model in a business suit, standing by a large window with a city skyline view, having tablet in hands, confidence, portrait.",
+        "Sksrr female model in a crisp white silk shirt, sitting in a private jet on couch at window, sky visible through large windows, bokeh.",
+        "A portrait of a young sksrr woman with wavy dark brown hair, sitting on a couch, wearing a black blazer over a white silk top. Her posture is confident and relaxed, with hands on her knees. Soft lighting highlights her sharp facial features, against a blurred, muted background, creating a minimalist, elegant atmosphere.",
+        "Elegant portrait of sksrr woman with long wavy hair, wearing a white professional outfit, soft smile, indoors, bright natural light, white brick background.",
+        "Elegant indoor portrait of sksrr woman in a black dress, wavy hair, thoughtful pose, dark background, soft lighting.",
+        "A professional headshot of sksrr woman in a modern office setting, wearing a crisp navy suit. Soft natural lighting from large windows, shallow depth of field, warm color palette.",
+        "Sksrr woman in a sleek, minimalist studio. High-key lighting, white background, wearing a light gray business casual shirt. Sharp focus on eyes, professional and approachable expression.",
+        "Corporate portrait of sksrr woman against a textured dark background. Dramatic side lighting, wearing a black turtleneck. Moody and sophisticated atmosphere, perfect for executive profiles.",
+        "Outdoor headshot of sksrr woman in an urban environment. Golden hour lighting, shallow depth of field with blurred city skyline backdrop. Business casual attire with a pop of color in the tie.",
+        "Professional studio portrait of sksrr woman with a gradient background from deep blue to teal. Rembrandt lighting, wearing a charcoal suit with a white shirt. Confident and trustworthy expression.",
+        "Sksrr woman in a creative office space, sitting casually at a modern desk. Soft, diffused lighting, wearing smart casual attire. Vibrant but professional color palette, ideal for tech or startup profiles.",
+        "Classic black and white headshot of sksrr woman. High contrast lighting, sharp focus on facial features. Timeless and elegant portrait suitable for any professional setting.",
+        "Environmental portrait of sksrr woman in a sunlit conference room. Wearing a light blue dress shirt, no tie. Soft background blur, warm and inviting atmosphere.",
+        "Studio headshot of sksrr woman with a bold, colorful background. Professional lighting with a subtle edge light. Modern business attire, friendly and approachable expression. Perfect for personal branding.",
+        "Professional portrait of sksrr woman in a library or study setting. Warm, ambient lighting from desk lamps. Wearing glasses and a tweed jacket for an intellectual, trustworthy look. Rich, earthy color tones.",
+        "A sksrr businesswoman in a tailored black blazer and white blouse, standing in a high-rise office with city views, exuding authority.",
+        "A sksrr female professional in a navy blue pantsuit, seated at a glass desk with a confident smile, ready for business.",
+        "A sksrr woman in a white blazer and pearl necklace, standing against a neutral studio backdrop, with a poised expression."
+      ];
+     
+      const promprttArr:any=[]
+      
+
+while (promprttArr.length < 7) {
+  console.log("in while")
+  const randomIndex = Math.floor(Math.random() * 25);
+ 
+    if(instanceClass=="man"){
+    promprttArr.push(malePrompts[randomIndex]);
+    }
+    else if(instanceClass=="woman")
+    promprttArr.push(femalePrompts[randomIndex]);
+  
+}
+
+      
+console.log("final prompt array",promprttArr)
 
       var shot:any;
       for(var i=0;i<promprttArr.length;i++){
         var imgResult:any =await fal.subscribe("fal-ai/flux-lora", {
             input: {
               prompt: promprttArr[i],
-              image_size: "landscape_4_3",
+              image_size:  {
+                "width": 1200,
+                "height": 1400
+              },
               num_inference_steps: 28,
               guidance_scale: 3.5,
               num_images: 1,

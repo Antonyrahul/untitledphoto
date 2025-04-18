@@ -19,8 +19,8 @@ const Prompts = () => {
 
   return (
     <PageContainer>
-      <Head>
-        <title>{title} - UntitledOne</title>
+      {/* <Head>
+        <title>{title} - Superrshots</title>
         <meta name="description" content={description} />
       </Head>
       <VStack
@@ -108,7 +108,7 @@ const Prompts = () => {
             </Flex>
           ))}
         </VStack>
-      </Flex>
+      </Flex> */}
     </PageContainer>
   );
 };

@@ -54,13 +54,13 @@ export default function Footer() {
           <Text fontSize="sm">
             <Link href="/faq">FAQ</Link>
           </Text>
-          <SocialButton href="https://github.com/untitledone">
+          <SocialButton href="https://github.com/Superrshots">
             <FaGithub />
           </SocialButton>
           <SocialButton href="https://twitter.com/thecreatorsinc">
             <FaTwitter />
           </SocialButton>
-          <SocialButton href="mailto:antonyrahul@untitled1.in">
+          <SocialButton href="mailto:support@Superrshots.in">
             <MdAlternateEmail />
           </SocialButton>
           <Text
@@ -68,7 +68,7 @@ export default function Footer() {
             fontSize="lg"
             fontWeight="bold"
           >
-            UntitledOne.
+            Superrshots.
           </Text>
         </Stack>
       </Container>
