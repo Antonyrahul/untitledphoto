@@ -10,6 +10,9 @@ export default async function handler(req:any, res:any) {
         where: { falReqIDT: payload.request_id },
     
       });
+
+      if(payload.request_id!=projects.falReqIDT)
+      {
      
       const instanceClass = projects.instanceClass;
       const age = projects.age
@@ -168,3 +171,4 @@ setTimeout(() => {
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   }
+}
