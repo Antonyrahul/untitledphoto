@@ -18,7 +18,7 @@ export default async function handler(req: any, res: any) {
       where: { id: projects.id },
       data: { webHook: "received" },
     });
-    res.status(200).json({ message: 'Webhook received successfully' });
+   
 
     const instanceClass = projects.instanceClass;
     const age = projects.age
@@ -114,9 +114,7 @@ export default async function handler(req: any, res: any) {
 
     console.log("final prompt array", promprttArr)
 
-    setTimeout(() => {
 
-    }, 5000);
 
     let shot: any;
     let i;
@@ -170,6 +168,7 @@ export default async function handler(req: any, res: any) {
       data: { falUrl: payload.payload.diffusers_lora_file.url, modelStatus: "succeeded" },
     });
   }
+  res.status(200).json({ message: 'Webhook received successfully' });
     // Send a response to acknowledge receipt of the webhook
    
   } else {
