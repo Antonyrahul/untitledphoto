@@ -233,7 +233,7 @@ const ShotCard = ({
             </Tooltip>
           </Box>
         </Flex>
-        <Text
+        {/* <Text
           mt={2}
           cursor="text"
           noOfLines={2}
@@ -241,13 +241,13 @@ const ShotCard = ({
           fontWeight="semibold"
         >
           {shot.prompt}
-        </Text>
+        </Text> */}
 
         <HStack justifyContent="space-between" mt={4}>
           <Text color="beige.400" fontSize="xs">
             {formatRelative(new Date(shot.createdAt), new Date())}
           </Text>
-          <Button
+          {/* <Button
             rightIcon={hasCopied ? <IoMdCheckmarkCircleOutline /> : undefined}
             colorScheme="beige"
             size="xs"
@@ -255,7 +255,7 @@ const ShotCard = ({
             onClick={onCopy}
           >
             {hasCopied ? "Copied" : "Copy prompt"}
-          </Button>
+          </Button> */}
         </HStack>
       </Flex>
     </Box>

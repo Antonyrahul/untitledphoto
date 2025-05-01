@@ -30,7 +30,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const urls = req.body.urls as string[];
     const studioName = req.body.studioName as string;
     const instanceClass = req.body.instanceClass as string;
+    const age = req.body.age as string;
+    const bodyType = req.body.bodyType as string
     console.log("instance class in create",instanceClass)
+    console.log("age  in create",age)
+    console.log("bodytype in create",bodyType)
     
   console.log("inga vandachu")
     const project = await db.project.create({
@@ -40,6 +44,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         userId: session?.userId,
         modelStatus: "not_created",
         instanceClass: instanceClass || "person",
+        age : age || "early 20's",
+        bodyType:bodyType || "athletic",
         instanceName: process.env.NEXT_PUBLIC_REPLICATE_INSTANCE_TOKEN!,
         credits: Number(process.env.NEXT_PUBLIC_STUDIO_SHOT_AMOUNT) || 50,
       },

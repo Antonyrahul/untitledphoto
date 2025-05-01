@@ -45,6 +45,8 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
   const [urls, setUrls] = useState<string[]>([]);
   const [studioName, setStudioName] = useState<string>("");
   const [instanceClass, setInstanceClass] = useState<string>("man");
+  const [age,setAge]= useState<string>("early 20's")
+  const [bodyType,setBodyType] = useState<string>("Athletic")
   const { uploadToS3 } = useS3Upload();
   const toast = useToast();
 
@@ -146,6 +148,8 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
         urls,
         studioName,
         instanceClass,
+        age,
+        bodyType
       }),
     {
       onSuccess: () => {
@@ -156,6 +160,8 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
         setUrls([]);
         setStudioName("");
         setInstanceClass("");
+        setAge("");
+        setBodyType("");
         setUploadState("not_uploaded");
 
         toast({
@@ -325,6 +331,7 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
               onChange={(e) => setStudioName(e.currentTarget.value)}
             />
           </FormControl>
+          
           <FormControl>
             <Select
               value={instanceClass}
@@ -343,6 +350,41 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
               Type of the subject
             </FormHelperText>
           </FormControl>
+         
+          <FormControl>
+            <Select
+              value={age}
+              onChange={(e) => setAge(e.currentTarget.value)}
+              backgroundColor="white"
+            >
+              <option value="early 20's">18-30</option>
+              <option value="early 30's">30-40</option>
+              <option value="early 40's">40-50</option>
+              <option value="early 50's">50-60</option>
+              <option value="early 60's">60-70</option>
+              <option value="early 70's">70-80</option>
+              <option value="early 80's">80-90</option>
+            </Select>
+            <FormHelperText color="blackAlpha.600">
+              Age range of the person
+            </FormHelperText>
+          </FormControl>
+          <FormControl>
+            <Select
+              value={bodyType}
+              onChange={(e) => setBodyType(e.currentTarget.value)}
+              backgroundColor="white"
+            >
+              <option value="Athletic">Athletic</option>
+              <option value="Slim">Slim</option>
+              <option value="Full">Full</option>
+
+            </Select>
+            <FormHelperText color="blackAlpha.600">
+              Body type of the person
+            </FormHelperText>
+          </FormControl>
+          
           <Box>
             <Button
               disabled={!Boolean(studioName)}

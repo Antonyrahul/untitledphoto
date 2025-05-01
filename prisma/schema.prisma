@@ -77,6 +77,8 @@ model Project {
   falReqIDT           String?
   instanceName        String
   instanceClass       String
+  age                 String?
+  bodyType            String?
   imageUrls           String[]
   zipImageUrl         String?
   createdAt           DateTime  @default(now())
