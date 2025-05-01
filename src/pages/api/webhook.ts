@@ -11,13 +11,7 @@ export default async function handler(req: any, res: any) {
 
     });
 
-    if(projects.webHook!="received")
-    {
 
-    let projectUp = await db.project.update({
-      where: { id: projects.id },
-      data: { webHook: "received" },
-    });
    
 
     const instanceClass = projects.instanceClass;
@@ -167,10 +161,8 @@ export default async function handler(req: any, res: any) {
       where: { id: projects.id },
       data: { falUrl: payload.payload.diffusers_lora_file.url, modelStatus: "succeeded" },
     });
-  }
-  else{
-    console.log("webhook already received")
-  }
+  
+
   res.status(200).json({ message: 'Webhook received successfully' });
     // Send a response to acknowledge receipt of the webhook
    
