@@ -83,7 +83,7 @@ console.log(sigedurl)
 
   project = await db.project.update({
     where: { id: project.id },
-    data: { falReqIDT: result.request_id , modelStatus: "inprogress" },
+    data: { falReqIDT: result.request_id , modelStatus: "inprogress",webHook:"not received" },
   });
 
 

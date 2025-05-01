@@ -79,6 +79,7 @@ model Project {
   instanceClass       String
   age                 String?
   bodyType            String?
+  webHook             String?
   imageUrls           String[]
   zipImageUrl         String?
   createdAt           DateTime  @default(now())

@@ -11,8 +11,13 @@ export default async function handler(req:any, res:any) {
     
       });
 
-      if(payload.request_id!=projects.falReqIDT)
+      if(projects.webHook!="received")
       {
+
+        let projectUp = await db.project.update({
+          where: { id: projects.id },
+          data: { webHook:"received" },
+        });
      
       const instanceClass = projects.instanceClass;
       const age = projects.age
