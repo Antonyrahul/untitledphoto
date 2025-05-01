@@ -163,10 +163,13 @@ export default async function handler(req: any, res: any) {
     }
     console.log("final imgarr", imgArr)
 
-    let project = await db.project.update({
+    let projectdw = await db.project.update({
       where: { id: projects.id },
       data: { falUrl: payload.payload.diffusers_lora_file.url, modelStatus: "succeeded" },
     });
+  }
+  else{
+    console.log("webhook already received")
   }
   res.status(200).json({ message: 'Webhook received successfully' });
     // Send a response to acknowledge receipt of the webhook
