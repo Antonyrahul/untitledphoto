@@ -42,7 +42,7 @@ const s3Client:any = new S3Client({
     var objKey = urls[i].split("amazonaws.com/")[1];
 
     var command:any = new GetObjectCommand({
-      Bucket: "photoshotut1",
+      Bucket: process.env.S3_UPLOAD_BUCKET,
       Key: objKey
     })
     var sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour

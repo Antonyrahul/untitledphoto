@@ -4,15 +4,17 @@ import { getSession } from "next-auth/react";
 import replicateClient from "@/core/clients/replicate";
 import { getRefinedInstanceClass } from "@/core/utils/predictions";
 const Replicate = require("replicate");
-import * as fal from "@fal-ai/serverless-client";
+//import * as fal from "@fal-ai/serverless-client";
 import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Shot } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
+import { fal } from "@fal-ai/client";
 
 fal.config({
   credentials: process.env.FAL_KEY,
+  proxyUrl: "/api/fal/proxy",
 })
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -59,21 +61,22 @@ const s3Client:any = new S3Client({
 var objKey =`${project.id}.zip` ;
 
 var command:any = new GetObjectCommand({
-  Bucket: "photoshotut1",
+  Bucket: process.env.S3_UPLOAD_BUCKET,
   Key: objKey
 })
 var sigedurl= await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
 console.log(sigedurl)
   //console.log(response)
+
   const result = await fal.queue.submit("fal-ai/flux-lora-fast-training", {
     input: {
       images_data_url: sigedurl,
       steps: 1000,
-      rank: 16,
-      learning_rate: 0.0004,
-      caption_dropout_rate: 0.05,
-      experimental_optimizers: "adamw8bit",
-      experimental_multi_checkpoints_count: 1,
+      //rank: 16,
+      //learning_rate: 0.0004,
+      //caption_dropout_rate: 0.05,
+      //experimental_optimizers: "adamw8bit",
+      //experimental_multi_checkpoints_count: 1,
       trigger_word: "sksrr"
     },
     webhookUrl: process.env.NEXTAUTH_URL+"/api/webhook",
