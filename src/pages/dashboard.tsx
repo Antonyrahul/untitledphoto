@@ -3,12 +3,20 @@ import Uploader from "@/components/dashboard/Uploader";
 import { Box, Center, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { GetServerSidePropsContext } from "next";
-import { getSession } from "next-auth/react";
+import { getSession ,useSession} from "next-auth/react";
 import { useQuery } from "react-query";
 import PageContainer from "@/components/layout/PageContainer";
 import { ProjectWithShots } from "./studio/[id]";
+import { headers } from 'next/headers'
+import {authOptions} from './api/auth/[...nextauth]'
+//import { useSession } from "next-auth/react"
+
 
 export default function Home() {
+  const session = useSession()
+  console.log("the seesion in dashboarsd is",session)
+  const serverSession=getSession();
+  console.log("serversession is",serverSession)
   const {
     data: projects,
     refetch: refetchProjects,
@@ -18,6 +26,20 @@ export default function Home() {
       .get<ProjectWithShots[]>("/api/projects")
       .then((response) => response.data)
   );
+  
+
+ axios.get("/api/ipaddr").then((resp)=>{console.log(resp.data.country)
+  if(resp.data.country=="IN"){
+    console.log("india")
+    localStorage.setItem("natcur","IN")
+  }
+  else{
+    localStorage.setItem("natcur","NOTIN")
+  }
+  
+  })
+
+
 
   return (
     <PageContainer>
@@ -86,5 +108,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  return { props: {} };
+  return { props: {session} };
 }

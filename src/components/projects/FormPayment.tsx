@@ -8,6 +8,12 @@ import {
   Spinner,
   Text,
   VStack,
+  Stack,
+  Heading,
+  Divider,
+  ListItem,
+  ListIcon,
+  Grid
 } from "@chakra-ui/react";
 import { Project } from "@prisma/client";
 import axios from "axios";
@@ -17,7 +23,11 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CheckedListItem } from "../home/Pricing";
 import Script from 'next/script';
+import PricingBox from './PricingBox'
+//import { prices } from "./data";
+import { HiBadgeCheck } from "react-icons/hi";
 
+import { getSession ,useSession} from "next-auth/react";
 
 const FormPayment = ({
   project,
@@ -28,12 +38,13 @@ const FormPayment = ({
 }) => {
   const [waitingPayment, setWaitingPayment] = useState(false);
   const { query } = useRouter();
-  const [amount,setAmount]=useState("1000")
+  const [amount,setAmount]=useState("4800")
+  const [plan,setPlan] =useState("noplan")
 
   useQuery(
     "check-payment",
     () =>
-      axios.get(`/api/checkout/check/${query.ppi}/${query.session_id}/studio`),
+      axios.get(`/api/checkout/check/${query.ppi}/${query.session_id}/plan/studio`),
     {
       cacheTime: 0,
       refetchInterval: 10,
@@ -48,7 +59,40 @@ const FormPayment = ({
     setWaitingPayment(query.ppi === project.id);
   }, [query, project]);
 
-  const createOrderId = async () => {
+  const natcur = localStorage.getItem("natcur")
+  const session = useSession()
+  console.log("the seesion in dashboarsd is",session)
+const prices:any = [
+  // {
+  //   name: "Starter",
+  //   features: new Array(3).fill(null).map((e) => "Lorem iptsum dolor"),
+  //   info: "Fusce purus tellus, tristique quis libero sit amet..."
+  // },
+  {
+    name: "pro",
+    price: natcur=="IN"?"₹2999":"$40",
+    amount:natcur=="IN"?"2999":"40",
+    //popular: true,
+    features: ["40 Professional Headshots","Ready in 90 minutes"],
+    info: "Fusce purus tellus, tristique quis libero sit amet..."
+  },
+  {
+    name: "business",
+    price: natcur=="IN"?"₹5999":"$70",
+    amount:natcur=="IN"?"5999":"70",
+    features:["100 Professional Headshots","Ready in 60 minutes"],
+    info: "Fusce purus tellus, tristique quis libero sit amet..."
+  },
+  {
+    name: "special",
+    price: natcur=="IN"?"₹9999":"$100",
+    amount:natcur=="IN"?"9999":"100",
+    features: ["200 Professional Headshots","Ready in 15 minutes"],
+    info: "Fusce purus tellus, tristique quis libero sit amet..."
+  }
+];
+
+  const createOrderId = async (price:any) => {
     try {
      const response = await fetch('/api/order/', {
       method: 'POST',
@@ -56,7 +100,7 @@ const FormPayment = ({
        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-       amount: parseFloat(amount)*100,
+       amount: parseFloat(price)*100,
        currency:"INR"
       })
      });
@@ -73,14 +117,16 @@ const FormPayment = ({
    };
 
 
-   const processPayment:any = async (e: React.FormEvent<HTMLFormElement>) => {
+   const processPayment:any = async (e: React.FormEvent<HTMLFormElement>,price:any) => {
     e.preventDefault();
-    console.log("in payment")
+    console.log("in payment",price)
+    if(localStorage.getItem("natcur")=="IN")
+    {
     try {
-     const orderId: string = await createOrderId();
+     const orderId: string = await createOrderId(price);
      const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: parseFloat(amount) * 100,
+      amount: parseFloat(price) * 100,
       currency: "INR",
       name: 'UntitiledOne',
       description: 'Payment for image genration',
@@ -92,7 +138,9 @@ const FormPayment = ({
         razorpayPaymentId: response.razorpay_payment_id,
         razorpayOrderId: response.razorpay_order_id,
         razorpaySignature: response.razorpay_signature,
-        ppi:project.id
+        ppi:project.id,
+        projectName:project.name
+        
        };
   
        const result = await fetch('/api/verify', {
@@ -125,6 +173,15 @@ const FormPayment = ({
     } catch (error) {
      console.log(error);
     }
+  }
+  else{
+    const project_id=project.id
+
+        const dodoPay = await axios.post("/api/dodo",{project_id})
+        console.log(dodoPay)
+        window.open(dodoPay.data.payment.payment_link,"_self")
+
+  }
    };
 
   return (
@@ -143,8 +200,8 @@ const FormPayment = ({
         </Box>
       ) : (
         <VStack spacing={4}>
-          <Box fontWeight="black" fontSize="3.5rem">
-            {formatStudioPrice()}
+          {/* <Box fontWeight="black" fontSize="3.5rem">
+            {"₹4800"}
             <Box
               ml={1}
               as="span"
@@ -154,11 +211,11 @@ const FormPayment = ({
             >
               / studio
             </Box>
-          </Box>
+          </Box> */}
           <Box fontWeight="bold" fontSize="xl">
             Your Studio is ready to be trained!
           </Box>
-          <List textAlign="left" spacing={1}>
+          {/* <List textAlign="left" spacing={1}>
             <CheckedListItem>
               <b>1</b> Studio with a <b>custom trained model</b>
             </CheckedListItem>
@@ -173,15 +230,92 @@ const FormPayment = ({
               Your Studio will be deleted 24 hours after your credits are
               exhausted
             </CheckedListItem>
-          </List>
-          <Button
+          </List> */}
+          {/* <Button
             //as={Link}
             variant="brand"
             //href={`/api/checkout/session?ppi=${project.id}`}
             onClick={processPayment}
           >
             Unlock Now - {formatStudioPrice()}
-          </Button>
+          </Button> */}
+
+<Grid
+        w="full"
+        gap={5}
+        justifyContent="center"
+        templateColumns={{
+          base: "inherit",
+          md: "repeat( auto-fit, 250px )"
+        }}
+      >
+        {prices.map((price:any) => (
+          
+                <Stack key={price.name}
+                //spacing={2}
+                border="3px solid"
+                borderColor={price.popular ? "teal.300" : "gray.300"}
+                borderRadius="0.7rem"
+                p={4}
+                h="350px"
+                backgroundColor="white"
+                position="relative"
+              >
+                {price.popular && (
+                  <Box
+                    position="absolute"
+                    top="0"
+                    right="0"
+                    backgroundColor="teal.300"
+                    color="white"
+                    paddingX={2}
+                    paddingY={1}
+                    borderRadius="0 0 0 0.7rem"
+                    fontSize="0.8rem"
+                  >
+                    POPULAR
+                  </Box>
+                )}
+                <Text textTransform="uppercase">{price.name}</Text>
+                
+                  <Heading>{price.price ?? "Free"}</Heading>
+                  
+              
+                <Divider borderColor="blackAlpha.500" />
+                <List flex="1">
+                  {price.features.map((feat:any) => (
+                    <ListItem textAlign={"left"} key={Math.random()}>
+                       {/* <ListIcon as={CheckCircleIcon} color="gray.400" />  */}
+                       <ListIcon fontSize="xl" as={HiBadgeCheck} />
+                      {feat}
+                    </ListItem>
+                  ))}
+                </List>
+                <Box>
+                  <Button
+                  
+                    variant="solid"
+                    size="sm"
+                    width="100%"
+                    // rightIcon={<ArrowForwardIcon />}
+                    borderRadius={0}
+                    display=""
+                    justifyContent="space-between"
+                    backgroundColor={price.popular ? "teal.300" : "black"}
+                    _hover={{
+                      backgroundColor: price.popular ? "teal.500" : "gray.300",
+                      color:"black"
+                    }}
+                    color=" white"
+                     onClick={(e:any)=>processPayment(e,price.amount)}
+                  >
+                    Buy
+                  </Button>
+                  
+                </Box>
+              </Stack>
+        ))}
+      </Grid>
           <Box pt={4}>
             <AvatarGroup size="md" max={10}>
               {project.imageUrls.map((url) => (

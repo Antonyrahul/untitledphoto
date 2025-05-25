@@ -21,6 +21,7 @@ import { IoIosFlash } from "react-icons/io";
 import { useMutation } from "react-query";
 import FormPayment from "./FormPayment";
 import ProjectDeleteButton from "./ProjectDeleteButton";
+import { CheckedListItem } from "../home/Pricing";
 
 const ProjectCard = ({
   project,

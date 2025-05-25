@@ -3,25 +3,40 @@ import { getRefinedInstanceClass } from "@/core/utils/predictions";
 //import * as fal from "@fal-ai/serverless-client";
 import { fal } from "@fal-ai/client";
 import axios from "axios";
+
 fal.config({
   credentials: process.env.FAL_KEY,
   proxyUrl: "/api/fal/proxy",
 })
+import { fetch, setGlobalDispatcher, Agent } from 'undici'
+
+setGlobalDispatcher(new Agent({ connect: { timeout: 60_000 } }) )
 export default async function handler(req: any, res: any) {
   if (req.method === 'POST') {
     // Process the webhook payload
     const payload = req.body;
+    console.log(payload)
+
+    if(payload.payload.prompt){
+      await processShotWebhook(payload)
+      res.status(200).json({ message: 'Webhook received successfully' });
+    }
+
+
+    else{
 
     const projects = await db.project.findFirstOrThrow({
       where: { falReqIDT: payload.request_id },
 
     });
+  
+   await processWebhook(payload,projects)
+  
+     
+    res.status(200).json({ message: 'Webhook received successfully' });
 
-     processWebhook(payload,projects)
-    //res.status(200).json({ message: 'Webhook received successfully' });
 
-
-
+    }
     
 
   //res.status(200).json({ message: 'Webhook received successfully' });
@@ -35,7 +50,26 @@ export default async function handler(req: any, res: any) {
   //}
 }
 
+async function processShotWebhook(payload:any){
 
+  console.log("in shot webhook")
+  const shot = await db.shot.findFirstOrThrow({
+    where: { webhookId: payload.request_id },
+
+  });
+
+  const shotUpdate = await db.shot.update({
+    where: { id:shot.id },
+    data: {
+   
+      outputUrl: payload.payload.images[0].url
+    },
+  });
+
+  console.log("shot update",shotUpdate)
+return true
+  
+}
 
 
 async function processWebhook(payload:any,projects:any){
@@ -136,13 +170,66 @@ async function processWebhook(payload:any,projects:any){
 
 
   let shot: any;
-  let i;
+  
   try{
-  for (i = 0; i < promprttArr.length; i++) {
-    console.log("in for loop number    ", i)
+  // for (i = 0; i < promprttArr.length; i++) {
+  //   console.log("in for loop number    ", i)
+  //   await setTimeout(() => {
+      
+  //   }, 1000);
     
-    let imgResult: any = await fal.subscribe("fal-ai/flux-lora", {
-      input: {
+  //   let imgResult: any = await fal.subscribe("fal-ai/flux-lora", {
+  //     input: {
+  //       prompt: promprttArr[i],
+  //       image_size: {
+  //         "width": 720,
+  //         "height": 720
+  //       },
+  //       num_inference_steps: 28,
+  //       guidance_scale: 3.5,
+  //       num_images: 1,
+  //       enable_safety_checker: true,
+  //       output_format: "jpeg",
+  //       loras: [{
+  //         path: payload.payload.diffusers_lora_file.url
+  //       }]
+  //     },
+      
+  //     logs: true,
+  //     // onQueueUpdate: (update) => {
+  //     //   if (update.status === "IN_PROGRESS") {
+  //     //     //update.logs.map((log) => log.message).forEach(console.log);
+  //     //     console.log("in progress")
+  //     //   }
+  //     // },
+  //   });
+  //   console.log("image result in for loop   ", i, imgResult)
+
+  //   shot = await db.shot.create({
+  //     data: {
+  //       prompt: promprttArr[i],
+
+  //       replicateId: "adichividuuu",
+  //       status: "starting",
+  //       projectId: projects.id,
+  //       outputUrl: imgResult.data.images[0].url
+  //     },
+  //   });
+  //   console.log("Shot in for loop", i, shot)
+
+
+  //   imgArr.push(imgResult)
+  //   console.log("imgarr result in for loop   ", i, imgArr)
+  // }
+  let i:any;
+  const responseUrlArr:any=[]
+  for (i = 0; i < 1; i++) {
+    console.log("in for loop number    ", i)
+
+    
+    let imgResult: any = await fal.queue.submit("fal-ai/flux-lora", {
+
+      input:{
         prompt: promprttArr[i],
         image_size: {
           "width": 720,
@@ -157,17 +244,20 @@ async function processWebhook(payload:any,projects:any){
           path: payload.payload.diffusers_lora_file.url
         }]
       },
-      pollInterval: 5000,
-      logs: true,
-      onQueueUpdate: (update) => {
-        if (update.status === "IN_PROGRESS") {
-          //update.logs.map((log) => log.message).forEach(console.log);
-          console.log("in progress")
-        }
-      },
+      webhookUrl: process.env.NEXTAUTH_URL+"/api/webhook",
+      
+      
+      //logs: true,
+      // onQueueUpdate: (update) => {
+      //   if (update.status === "IN_PROGRESS") {
+      //     //update.logs.map((log) => log.message).forEach(console.log);
+      //     console.log("in progress")
+      //   }
+      // },
     });
     console.log("image result in for loop   ", i, imgResult)
 
+        
     shot = await db.shot.create({
       data: {
         prompt: promprttArr[i],
@@ -175,25 +265,112 @@ async function processWebhook(payload:any,projects:any){
         replicateId: "adichividuuu",
         status: "starting",
         projectId: projects.id,
-        outputUrl: imgResult.data.images[0].url
+        webhookId:imgResult.request_id
+        //outputUrl: imgResult.data.images[0].url
       },
     });
-    console.log("Shot in for loop", i, shot)
+    //responseUrlArr.push(imgResult.data.response_url)
+    
+    
+    // let checkStatusInt =  setInterval(async() => {
+    //   let checkStatus:any= await axios.get(imgResult.data.status_url,{ headers: {
+    //     'Authorization': ' Key c82bc83f-cac2-48ca-ae09-aa3b916f5688:b1b81cf5194f4a38ac8d0dd96eba44e3',
+    //     'Content-Type': 'application/json'
+    // }})
+    // console.log("checkStatus",i,checkStatus.data)
+    // if(checkStatus.data.status==="COMPLETED"){
+         
+    //       let getImage:any= await axios.get(imgResult.data.response_url,{ headers: {
+    //         'Authorization': ' Key c82bc83f-cac2-48ca-ae09-aa3b916f5688:b1b81cf5194f4a38ac8d0dd96eba44e3',
+    //         'Content-Type': 'application/json'
+    //     }})
+    //     console.log("getmage",i,getImage.data)
+    //         shot = await db.shot.create({
+    //   data: {
+    //     prompt: promprttArr[i],
+
+    //     replicateId: "adichividuuu",
+    //     status: "starting",
+    //     projectId: projects.id,
+    //     outputUrl: getImage.data.images[0].url
+    //   },
+    // });
+    // console.log("Shot in for loop", i, shot)
 
 
-    imgArr.push(imgResult)
-    console.log("imgarr result in for loop   ", i, imgArr)
+    // imgArr.push(getImage.data)
+    // console.log("imgarr result in for loop   ", i, imgArr)
+    // clearInterval(checkStatusInt)
+    // }
+    // }, 5000);
+
+    
+    
+    
+    // shot = await db.shot.create({
+    //   data: {
+    //     prompt: promprttArr[i],
+
+    //     replicateId: "adichividuuu",
+    //     status: "starting",
+    //     projectId: projects.id,
+    //     outputUrl: imgResult.data.images[0].url
+    //   },
+    // });
+    // console.log("Shot in for loop", i, shot)
+
+
+    // imgArr.push(imgResult)
+    // console.log("imgarr result in for loop   ", i, imgArr)
   }
+
+  //console.log("first for completed",responseUrlArr)
+let j;
+// setTimeout(async() => {
+  
+
+//   for(j=0;j<2;j++)
+//   {
+       
+
+    
+         
+//           let getImage:any= await axios.get(responseUrlArr[j],{ headers: {
+//             'Authorization': ' Key c82bc83f-cac2-48ca-ae09-aa3b916f5688:b1b81cf5194f4a38ac8d0dd96eba44e3',
+//             'Content-Type': 'application/json'
+//         }})
+//         console.log("getmage",j,getImage.data)
+//             shot = await db.shot.create({
+//       data: {
+//         prompt: promprttArr[j],
+
+//         replicateId: "adichividuuu",
+//         status: "starting",
+//         projectId: projects.id,
+//         outputUrl: getImage.data.images[0].url
+//       },
+//     });
+//     console.log("Shot in for loop", j, shot)
+
+
+//     imgArr.push(getImage.data)
+//     console.log("imgarr result in for loop   ", j, imgArr)
+   
+   
+
+//   }
+// }, 600000);
 }
 catch(e){
   console.log("for loop error",e)
 }
-  console.log("final imgarr", imgArr)
+  //console.log("final imgarr", imgArr)
 
   let projectdw = await db.project.update({
     where: { id: projects.id },
     data: { falUrl: payload.payload.diffusers_lora_file.url, modelStatus: "succeeded" },
   });
+  return "success"
 
 
 }

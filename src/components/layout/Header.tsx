@@ -6,6 +6,7 @@ import {
   IconButton,
   Text,
   Tooltip,
+  Image
 } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -38,7 +39,8 @@ const Header = () => {
             _groupHover={{ color: "brand.500" }}
             as={IoIosFlash}
           /> */}
-          <Text display={{ base: "none", sm: "inherit" }}>Superrshots.</Text>
+          <Image src="/favicon.png" ></Image>
+          {/* <Text display={{ base: "none", sm: "inherit" }}>Superrshots.</Text> */}
         </Flex>
         <HStack spacing={1}>
           {/* <Button

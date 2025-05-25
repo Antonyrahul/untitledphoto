@@ -48,6 +48,7 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  dodoCustId    String?
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
@@ -71,6 +72,8 @@ model Project {
   name                String
   replicateModelId    String?
   stripePaymentId     String?
+  dodoPaymentId       String?
+  dodoCustId          String?
   modelVersionId      String?
   modelStatus         String?
   falUrl              String?
@@ -108,12 +111,14 @@ model Shot {
   hdStatus    HdStatus   @default(NO)
   hdPredictionId String?
   hdOutputUrl   String?
+  webhookId     String?
 }
 
 model Payment {
   id        String   @id @default(cuid())
   type      String
   status    String
+  plan      String
   stripeSessionId String
   createdAt DateTime @default(now())
   Project   Project? @relation(fields: [projectId], references: [id])

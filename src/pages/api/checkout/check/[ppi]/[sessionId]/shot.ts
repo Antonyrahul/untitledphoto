@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import db from "@/core/db";
+import { createTransport } from "nodemailer";
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
@@ -12,6 +14,7 @@ export default async function handler(
 ) {
   const sessionId = req.query.sessionId as string;
   const ppi = req.query.ppi as string;
+
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
 
@@ -53,6 +56,7 @@ export default async function handler(
         stripeSessionId: sessionId,
       },
     });
+    
 
     return res.status(200).json({
       success: true,

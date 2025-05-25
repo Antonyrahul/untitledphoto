@@ -57,7 +57,7 @@ export default function LoginEmail({ url }: { url: string }): JSX.Element {
                 </a>
               </MjmlText>
               <MjmlText>
-                If you did not request this email, you can safely ignore it.
+                If you did not request this email, you can safely ignore it....
               </MjmlText>
             </MjmlColumn>
           </MjmlSection>

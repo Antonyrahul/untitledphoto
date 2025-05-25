@@ -49,6 +49,7 @@ const theme = extendTheme({
           color: "#FFFFFF",
           shadow: "lg",
           borderWidth: "1px",
+          borderRadius:"0px",
           borderColor: "blackAlpha.100",
           _hover: {
             shadow: "md",

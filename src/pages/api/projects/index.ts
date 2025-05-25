@@ -10,6 +10,8 @@ import  { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import geoip from "geoip-country";
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //const session = await getSession({ req });
@@ -20,7 +22,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log("the session in index is",session)
   console.log("the token is",token)
 
+let ip:any
 
+   console.log(req.headers)
+   console.log (req.headers['x-real-ip']) 
+
+  console.log( geoip.lookup(req.headers['x-forwarded-for'] as string))
+  
+
+
+    
   if (!session?.user) {
     console.log("ther user json is",session?.user)
     return res.status(401).json({ message: "Not authenticated" });

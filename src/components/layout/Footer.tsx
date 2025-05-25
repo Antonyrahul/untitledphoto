@@ -49,18 +49,18 @@ export default function Footer() {
         <Text></Text>
         <Stack alignItems="center" direction="row" spacing={4}>
           <Text fontSize="sm">
-            <Link href="/terms">Terms and Privacy</Link>
+            <Link href="https://www.superrshots.com/terms">Terms</Link>
           </Text>
           <Text fontSize="sm">
-            <Link href="/faq">FAQ</Link>
+            <Link href="https://www.superrshots.com/contact-us">Contact us</Link>
           </Text>
-          <SocialButton href="https://github.com/Superrshots">
+          {/* <SocialButton href="https://github.com/Superrshots">
             <FaGithub />
           </SocialButton>
           <SocialButton href="https://twitter.com/thecreatorsinc">
             <FaTwitter />
-          </SocialButton>
-          <SocialButton href="mailto:support@Superrshots.in">
+          </SocialButton> */}
+          <SocialButton href="mailto:hello@superrshots.com">
             <MdAlternateEmail />
           </SocialButton>
           <Text
