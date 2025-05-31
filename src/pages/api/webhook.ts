@@ -3,7 +3,8 @@ import { getRefinedInstanceClass } from "@/core/utils/predictions";
 //import * as fal from "@fal-ai/serverless-client";
 import { fal } from "@fal-ai/client";
 import axios from "axios";
-
+import s3Client from "@/core/clients/s3";
+import { DeleteObjectCommand,PutObjectCommand } from "@aws-sdk/client-s3";
 fal.config({
   credentials: process.env.FAL_KEY,
   proxyUrl: "/api/fal/proxy",
@@ -57,12 +58,39 @@ async function processShotWebhook(payload:any){
     where: { webhookId: payload.request_id },
 
   });
+  const project = await db.project.findFirstOrThrow({
+    where: {
+      id: shot.projectId as string,
+
+    },
+    include: {
+      _count: {
+        select: { shots: true },
+      },
+      shots: {
+        orderBy: { createdAt: "desc" },
+        
+        
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  console.log("project count in webhook ",project._count.shots)
+  const s3put= await s3Client.send(
+    new PutObjectCommand({
+      Bucket: process.env.S3_UPLOAD_BUCKET,
+      Key: `${shot.projectId}/${payload.request_id}.jpg`,
+    })
+  );
+  console.log("s3put",s3put)
+
 
   const shotUpdate = await db.shot.update({
     where: { id:shot.id },
     data: {
    
-      outputUrl: payload.payload.images[0].url
+      outputUrl: payload.payload.images[0].url,
+      awsOutputUrl:`${shot.projectId}/${payload.request_id}.jpg`
     },
   });
 
@@ -223,7 +251,7 @@ async function processWebhook(payload:any,projects:any){
   // }
   let i:any;
   const responseUrlArr:any=[]
-  for (i = 0; i < 1; i++) {
+  for (i = 0; i < 4; i++) {
     console.log("in for loop number    ", i)
 
     

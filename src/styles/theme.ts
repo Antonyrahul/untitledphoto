@@ -32,7 +32,7 @@ const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: "#faf6f5",
+        bg: "#FFFFFF",
       },
     },
   },
@@ -45,12 +45,12 @@ const theme = extendTheme({
       variants: {
         brand: {
           transition: "all 0.2s",
-          bg: "brand.500",
+          bg: "#FF6534",
           color: "#FFFFFF",
           shadow: "lg",
           borderWidth: "1px",
-          borderRadius:"0px",
-          borderColor: "blackAlpha.100",
+          borderRadius:"10px",
+          borderColor: "FF6534",
           _hover: {
             shadow: "md",
           },

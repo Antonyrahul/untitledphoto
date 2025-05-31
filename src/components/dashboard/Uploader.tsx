@@ -261,7 +261,7 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
                     setFiles(files.filter((_, i) => i !== index));
                   }}
                   borderRadius="full"
-                  backgroundColor="brand.500"
+                  backgroundColor="#FF6534"
                   as={IoIosClose}
                   fontSize="2rem"
                 />
@@ -330,6 +330,10 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
               value={studioName}
               onChange={(e) => setStudioName(e.currentTarget.value)}
             />
+                        <FormHelperText color="blackAlpha.600">
+                        Name of the awesome person
+
+            </FormHelperText>
           </FormControl>
           
           <FormControl>
@@ -347,7 +351,7 @@ const Uploader = ({ handleOnAdd }: { handleOnAdd: () => void }) => {
               <option value="style">Style</option>
             </Select>
             <FormHelperText color="blackAlpha.600">
-              Type of the subject
+              Gender of the person
             </FormHelperText>
           </FormControl>
          

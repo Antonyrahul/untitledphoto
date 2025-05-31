@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { CheckedListItem } from "../home/Pricing";
 import Script from 'next/script';
-import PricingBox from './PricingBox'
+//import PricingBox from './PricingBox'
 //import { prices } from "./data";
 import { HiBadgeCheck } from "react-icons/hi";
 
@@ -39,12 +39,12 @@ const FormPayment = ({
   const [waitingPayment, setWaitingPayment] = useState(false);
   const { query } = useRouter();
   const [amount,setAmount]=useState("4800")
-  const [plan,setPlan] =useState("noplan")
+  //const [plan,setPlan] =useState("noplan")
 
   useQuery(
     "check-payment",
     () =>
-      axios.get(`/api/checkout/check/${query.ppi}/${query.session_id}/plan/studio`),
+      axios.get(`/api/checkout/check/${query.ppi}/${query.session_id}/studio`),
     {
       cacheTime: 0,
       refetchInterval: 10,
@@ -69,26 +69,29 @@ const prices:any = [
   //   info: "Fusce purus tellus, tristique quis libero sit amet..."
   // },
   {
-    name: "pro",
+    name: "PRO",
     price: natcur=="IN"?"₹2999":"$40",
     amount:natcur=="IN"?"2999":"40",
     //popular: true,
     features: ["40 Professional Headshots","Ready in 90 minutes"],
-    info: "Fusce purus tellus, tristique quis libero sit amet..."
+    info: "Fusce purus tellus, tristique quis libero sit amet...",
+    dodopid:"pdt_o2dk8mR3Z4DM95VpCkPxK"
   },
   {
-    name: "business",
+    name: "BUSINESS",
     price: natcur=="IN"?"₹5999":"$70",
     amount:natcur=="IN"?"5999":"70",
     features:["100 Professional Headshots","Ready in 60 minutes"],
-    info: "Fusce purus tellus, tristique quis libero sit amet..."
+    info: "Fusce purus tellus, tristique quis libero sit amet...",
+    dodopid:"pdt_91HxwjtPzOj2AkWkPHL31"
   },
   {
-    name: "special",
+    name: "SPECIAL",
     price: natcur=="IN"?"₹9999":"$100",
     amount:natcur=="IN"?"9999":"100",
     features: ["200 Professional Headshots","Ready in 15 minutes"],
-    info: "Fusce purus tellus, tristique quis libero sit amet..."
+    info: "Fusce purus tellus, tristique quis libero sit amet...",
+    dodopid:"pdt_IsAq0EgZRbhtssGXnlYFA"
   }
 ];
 
@@ -117,7 +120,7 @@ const prices:any = [
    };
 
 
-   const processPayment:any = async (e: React.FormEvent<HTMLFormElement>,price:any) => {
+   const processPayment:any = async (e: React.FormEvent<HTMLFormElement>,price:any,name:any,dodopid:any) => {
     e.preventDefault();
     console.log("in payment",price)
     if(localStorage.getItem("natcur")=="IN")
@@ -133,13 +136,16 @@ const prices:any = [
       order_id: orderId,
       // callback_url: `${process.env.NEXTAUTH_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}&ppi=${project.id}`,
       handler: async function (response: any) {
+        console.log("rzp response",response)
        const data = {
         orderCreationId: orderId,
         razorpayPaymentId: response.razorpay_payment_id,
         razorpayOrderId: response.razorpay_order_id,
         razorpaySignature: response.razorpay_signature,
         ppi:project.id,
-        projectName:project.name
+        projectName:project.name,
+        amount:parseFloat(price) * 100,
+        plan:name
         
        };
   
@@ -177,7 +183,7 @@ const prices:any = [
   else{
     const project_id=project.id
 
-        const dodoPay = await axios.post("/api/dodo",{project_id})
+        const dodoPay = await axios.post("/api/dodo",{project_id,price,name,dodopid})
         console.log(dodoPay)
         window.open(dodoPay.data.payment.payment_link,"_self")
 
@@ -298,16 +304,17 @@ const prices:any = [
                     size="sm"
                     width="100%"
                     // rightIcon={<ArrowForwardIcon />}
-                    borderRadius={0}
+                    borderRadius={10}
                     display=""
                     justifyContent="space-between"
-                    backgroundColor={price.popular ? "teal.300" : "black"}
+                  
+                    backgroundColor={price.popular ? "#FF6534" : "#FF6534"}
                     _hover={{
                       backgroundColor: price.popular ? "teal.500" : "gray.300",
                       color:"black"
                     }}
                     color=" white"
-                     onClick={(e:any)=>processPayment(e,price.amount)}
+                     onClick={(e:any)=>processPayment(e,price.amount,price.name,price.dodopid)}
                   >
                     Buy
                   </Button>
@@ -319,6 +326,7 @@ const prices:any = [
           <Box pt={4}>
             <AvatarGroup size="md" max={10}>
               {project.imageUrls.map((url) => (
+                 
                 <Avatar key={url} src={url} />
               ))}
             </AvatarGroup>

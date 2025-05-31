@@ -49,6 +49,7 @@ model User {
   name          String?
   email         String?   @unique
   dodoCustId    String?
+  isNewUser     String?
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
@@ -81,6 +82,8 @@ model Project {
   instanceName        String
   instanceClass       String
   age                 String?
+  plan                String?
+  amount              String?
   bodyType            String?
   webHook             String?
   imageUrls           String[]
@@ -105,6 +108,7 @@ model Shot {
   Project     Project? @relation(fields: [projectId], references: [id])
   projectId   String?
   outputUrl   String?
+  awsOutputUrl String?
   bookmarked  Boolean? @default(false)
   blurhash    String?
   seed        Int?
@@ -118,7 +122,7 @@ model Payment {
   id        String   @id @default(cuid())
   type      String
   status    String
-  plan      String
+  plan      String?
   stripeSessionId String
   createdAt DateTime @default(now())
   Project   Project? @relation(fields: [projectId], references: [id])

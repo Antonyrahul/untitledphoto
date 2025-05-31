@@ -15,6 +15,7 @@ import {authOptions} from './api/auth/[...nextauth]'
 
 export default function Payment() {
   const router=useRouter()
+  console.log(router.query)
   console.log(router.query.payment_id)
   const payment_id= router.query.payment_id
 

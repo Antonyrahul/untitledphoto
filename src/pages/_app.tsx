@@ -10,6 +10,8 @@ import theme from "@/styles/theme";
 import { Analytics } from "@vercel/analytics/react";
 import DefaultHead from "@/components/layout/DefaultHead";
 import Script from "next/script";
+import localFont from '@next/font/local'
+
 
 
 import "react-medium-image-zoom/dist/styles.css";
@@ -17,6 +19,9 @@ import "react-medium-image-zoom/dist/styles.css";
 const queryClient = new QueryClient();
 export const inter = Inter({ subsets: ["latin"] });
 declare const window: Window & { dataLayer: Record<string, unknown>[]; };
+const myFont = localFont({
+  src: './Helvetica.otf',
+})
 
 function App({
   Component,
@@ -58,7 +63,7 @@ function App({
       <SessionProvider session={session}>
         <QueryClientProvider client={queryClient}>
           <DefaultHead />
-          <Flex className={inter.className} flexDirection="column" minH="100vh">
+          <Flex className={myFont.className} flexDirection="column" minH="100vh">
             <Header />
             <Component {...pageProps} />
             <Footer />

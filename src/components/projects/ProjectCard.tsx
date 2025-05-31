@@ -49,7 +49,7 @@ const ProjectCard = ({
 
   const isWaitingPayment = !project.stripePaymentId;
   const isWaitingTraining =
-    project.stripePaymentId && !project.replicateModelId;
+    project.stripePaymentId && !project.falUrl;
 
   const isReady = project.modelStatus === "succeeded";
   const isTraining =

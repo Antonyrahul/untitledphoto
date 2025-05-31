@@ -36,16 +36,8 @@ export default function AuthForm() {
           Check your email <Icon mb="-4px" as={MdCheckCircleOutline} />
         </Heading>
         <Text maxWidth="30rem" mt={3} fontSize="2xl">
-          A <b>sign in link</b> has been sent to your email address.{" "}
-          {name && url && (
-            <>
-              Check{" "}
-              <Link textDecoration="underline" isExternal href={url}>
-                your {name} inbox
-              </Link>
-              .
-            </>
-          )}
+          A <b>sign in link</b> has been sent to your email address.Check your inbox
+
         </Text>
       </Box>
     );

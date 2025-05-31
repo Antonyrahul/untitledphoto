@@ -30,6 +30,7 @@ export default function Home() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession({ req: context.req });
+  console.log(session)
   const projectId = context.query.id as string;
   console.log(projectId)
 
